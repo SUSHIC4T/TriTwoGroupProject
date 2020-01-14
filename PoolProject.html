@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			#table {
+				width: 700px;
+				height: 350px;
+				border: 3px solid black;
+			}
+		</style>
+		<meta charset="UTF-8">
+		<title>Pool Game</title>
+	</head>
+	<body>
+		<canvas id="table">
+	</body>
+	<script>
+		// canvas varibles
+		var table = document.getElementById("table");
+		var ctx = table.getContext("2d");
+		// this function creats the array of poolballs
+		function startGame(selectedGame) {
+			//
+		}
+		// ball constructor
+		function ball (x,y,color, side) {
+			// if side is true it becomes a solid, if false it is a stripe
+			if(side) {
+				this.side = "solid";
+			}else{
+				this.side = "stripes";
+			}
+			this.color = color;
+			this.x=x;
+			this.y=y
+			//room for more 	
+		}
+		
+	</script>
+</html>
