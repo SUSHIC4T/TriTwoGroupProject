@@ -12,18 +12,50 @@
 		<title>Pool Game</title>
 	</head>
 	<body>
-		<canvas id="table">
+		<button onclick="startGame(true)">Click to start</button>
+		<canvas id="table" width="700" height="350"> </canvas>
 	</body>
 	<script>
 		// canvas varibles
 		var table = document.getElementById("table");
 		var ctx = table.getContext("2d");
 		// this function creats the array of poolballs
+		var game;
+		//document.onload = "game = true"
+		var balls = [];
+		//balls = startgame(game,balls);
 		function startGame(selectedGame) {
-			//
+			//if selected game is false it is nine ball pool, and if it is true, it is eight ball pool
+			if(selectedGame){
+				//array of balls
+				balls = [
+					oneBall = new ball (10,10,"yellow",true),
+					twoBall = new ball (200,200,"blue",true),
+					threeBall = new ball (600,123,"red",true),
+					fourBall = new ball (400,50,"purple",true),
+					fiveBall = new ball (123,50,"orange",true),
+					sixBall = new ball (400,123,"green",true),
+					sevenBall = new ball (200,50,"brown",true),
+					eightBall = new ball (600,50,"black",true),
+					nineBall = new ball (50,123,"yellow",false),
+					tenBall = new ball (100,150,"blue",false),
+					elevenBall = new ball (500,50,"red",false),
+					twelveBall = new ball (200,123,"purple",false),
+					thirteenBall = new ball (75,200,"orange",false),
+					fourteenBall = new ball (650,123,"green",false),
+					fifthteenBall = new ball (400,60,"brown",false)];
+				setInterval( animate, 33);
+				
+			}
+		} 
+		//this is where the magic happens 
+		function animate(){
+			for(i=0;i<balls.length;i++) {
+				balls[i].draw();
+			}
 		}
 		// ball constructor
-		function ball (x,y,color, side) {
+		function ball (x,y,color,side) {
 			// if side is true it becomes a solid, if false it is a stripe
 			if(side) {
 				this.side = "solid";
@@ -33,7 +65,13 @@
 			this.color = color;
 			this.x=x;
 			this.y=y
-			//room for more 	
+			//draw method	
+			this.draw = function (){
+				ctx.fillStyle = this.color;
+				ctx.beginPath();
+				ctx.arc(this.x,this.y,15,0,2*Math.PI);
+				ctx.fill();
+			}
 		}
 		
 	</script>
