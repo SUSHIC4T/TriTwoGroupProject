@@ -13,30 +13,115 @@
 		<title>Pool Game</title>
 	</head>
 	<body>
-		<canvas id="table">
+		<button onclick="startGame(true)">Click to play 8 ball pool</button>
+		<button onclick="startGame(false)">Click to play 9 ball pool</button>
+		<canvas id="table" width="700" height="350"> </canvas>
 	</body>
 	<script>
 		// canvas varibles
 		var table = document.getElementById("table");
 		var ctx = table.getContext("2d");
 		// this function creats the array of poolballs
-		function startGame(selectedGame) {
-			//
+		var game;
+		//document.onload = "game = true"
+		var balls = [];
+		//balls = startgame(game,balls);
+		function startGame(eightBall) {
+			//if selected game is false it is nine ball pool, and if it is true, it is eight ball pool
+			if(eightBall){
+				//array of balls
+				//this array sets the positions for a the start of the game
+				balls = [
+					oneBall = new ball (240,175,"yellow",true,1,0,0),
+					twoBall = new ball (180,205,"blue",true,2,0,0),
+					threeBall = new ball (180,145,"red",true,3,0,0),
+					fourBall = new ball (120,115,"purple",true,4,0,0),
+					fiveBall = new ball (120,175,"orange",true,5,0,0),
+					sixBall = new ball (150,190,"green",true,6,0,0),
+					sevenBall = new ball (120,235,"brown",true,7,0,0),
+					eightBall = new ball (180,175,"black",true,8,0,0),
+					nineBall = new ball (210,160,"yellow",false,9,0,0),
+					tenBall = new ball (210,190,"blue",false,10,0,0),
+					elevenBall = new ball (150,130,"red",false,11,0,0),
+					twelveBall = new ball (120,145,"purple",false,12,0,0),
+					thirteenBall = new ball (150,160,"orange",false,13,0,0),
+					fourteenBall = new ball (150,220,"green",false,14,0,0),
+					fifthteenBall = new ball (120,205,"brown",false,15,0,0),
+					queueBall = new ball (600,175,"white",true,0,0,0)];
+				animate();
+				setInterval(checker, 33);
+			}else{
+				//array of balls
+				balls = [
+					oneBall = new ball (240,175,"yellow",true,1,0,0),
+					twoBall = new ball (120,175,"blue",true,2,0,0),
+					threeBall = new ball (210,160,"red",true,3,0,0),
+					fourBall = new ball (150,190,"purple",true,4,0,0),
+					fiveBall = new ball (210,190,"orange",true,5,0,0),
+					sixBall = new ball (150,160,"green",true,6,0,0),
+					sevenBall = new ball (180,145,"brown",true,7,0,0),
+					eightBall = new ball (180,205,"black",true,8,0,0),
+					nineBall = new ball (180,175,"yellow",false,9,0,0),
+					queueBall = new ball (600,175,"white",true,0,0,0)];
+				animate();
+				setInterval(checker, 33);
+			}
+		}
+		//this is where the magic happens
+		function checker(){
+			var stopBalls = true;
+			for(i=0;i<balls.length;i++) {
+				if(balls[i].vel != 0){
+					stopBalls = false;
+				}
+			}
+			if (stopBalls) {
+				animate();
+			}
+		}
+		function animate(){
+			clearCanvas();
+			for(i=0;i<balls.length;i++) {
+				balls[i].draw();
+			}
+		}
+		function clearCanvas(){
+			ctx.fillStyle = "#00AF00";
+			ctx.fillRect(0,0,700,350);
+		}
+		function collisitonCheck(b1,b2) {
+
 		}
 		// ball constructor
-		function ball (x,y,color, side) {
-			// if side is true it becomes a solid, if false it is a stripe
-			if(side) {
-				this.side = "solid";
-			}else{
-				this.side = "stripes";
-			}
+		function ball (x,y,color,solid,Bn,v,a) {
 			this.color = color;
-			this.x=x;
-			this.y=y
-			//room for more
-
+			this.x = x;
+			this.y = y;
+			this.solid = solid;
+			this.ballNum = Bn;
+			this.xcel = a;
+			this.vel = v;
+			this.mass;
+			//draw method
+			this.draw = function (){
+				if(this.solid) {
+					ctx.fillStyle = this.color;
+					ctx.beginPath();
+					ctx.arc(this.x,this.y,15,0,2*Math.PI);
+					ctx.fill();
+					ctx.fillStyle = "white";
+					ctx.beginPath();
+					ctx.arc(this.x + 5,this.y - 5,3,0,2*Math.PI);
+					ctx.fill();
+				}else{
+					ctx.fillStyle = "white"
+					ctx.beginPath();
+					ctx.arc(this.x,this.y,15,0,2*Math.PI);
+					ctx.fill();
+					ctx.fillStyle = this.color;
+					ctx.fillRect(this.x - 8, this.y - 12, 16,24);
+				}
+			}
 		}
-
 	</script>
 </html>
