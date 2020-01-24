@@ -23,10 +23,22 @@
 		var ctx = table.getContext("2d");
 		// this function creats the array of poolballs
 		var game;
+
 		//document.onload = "game = true"
+		var pocketSize = 50; //made global so we can easily adjust for all pockets
+		function x(){
+			//return the x coordinate of something
+		}
+		function width(){
+			//returns width of object
+		}
+		function height(){
+			//returns height of object
+		}//these functions needed to get dimensions of table
+
 		var balls = [];
 		//balls = startgame(game,balls);
-		function startGame(eightBall) {
+	//	function startGame(eightBall) {
 			//if selected game is false it is nine ball pool, and if it is true, it is eight ball pool
 			if(eightBall){
 				//array of balls
@@ -48,6 +60,12 @@
 					fourteenBall = new ball (150,220,"green",false,14,0,0),
 					fifthteenBall = new ball (120,205,"brown",false,15,0,0),
 					queueBall = new ball (600,175,"white",true,0,0,0)];
+					pocketUpperLeft = new pocket(table.x, 0);
+					pocketUpperMiddle = new pocket(table.x + table.width/2, 0);
+					pocketUpperRight = new pocket(table.x + table.width - pocketSize, 0);
+					pocketBottomLeft = new pocket(table.x, table.height - pocketSize);
+					pocketBottomMiddle = new pocket(table.x + table.width/2, table.height - pocketSize);
+					pocketBottomRight = new pocket(table.x + table.width - pocketSize, table.height - pocketSize);
 				animate();
 				setInterval(checker, 33);
 			}else{
@@ -65,6 +83,19 @@
 					queueBall = new ball (600,175,"white",true,0,0,0)];
 				animate();
 				setInterval(checker, 33);
+			}
+
+		function pocket(x, y,){
+			this.x = x;
+			this.y = y;
+			this.color = black;
+			this.draw = function(){
+			this.width = pocketSize;
+			this.height = pocketSize;
+			this.draw = function(){
+				context.fillStyle = this.color;
+        context.fillRect(this.x, this.y, this.width, this.height);
+			}
 			}
 		}
 		//this is where the magic happens
