@@ -56,13 +56,15 @@
 					fourteenBall = new ball (150,220,"green",false,14,0,0),
 					fifthteenBall = new ball (120,205,"brown",false,15,0,0),
 					queueBall = new ball (600,175,"white",true,0,0,0)];
-					//pockets
-					pocketUpperLeft = new pocket(table.x, 0);
-					pocketUpperMiddle = new pocket(table.x + table.width/2, 0);
-					pocketUpperRight = new pocket(table.x + table.width, 0);
-					pocketBottomLeft = new pocket(table.x, table.height);
-					pocketBottomMiddle = new pocket(table.x + table.width/2, table.height);
-					pocketBottomRight = new pocket(table.x + table.width, table.height);
+				//pockets
+				pockets = [
+					pocketUpperLeft = new pocket(0, 0),
+					pocketUpperMiddle = new pocket(table.width/2, 0),
+					pocketUpperRight = new pocket(table.width, 0),
+					pocketBottomLeft = new pocket(0, table.height),
+					pocketBottomMiddle = new pocket(table.width/2, table.height),
+					pocketBottomRight = new pocket(table.width, table.height) ];
+
 				animate();
 				setInterval(checker, 33);
 			}else{
@@ -78,13 +80,14 @@
 					eightBall = new ball (180,205,"black",true,8,0,0),
 					nineBall = new ball (180,175,"yellow",false,9,0,0),
 					queueBall = new ball (600,175,"white",true,0,0,0)];
-					//pockets
-					pocketUpperLeft = new pocket(table.x, 0);
-					pocketUpperMiddle = new pocket(table.x + table.width/2, 0);
-					pocketUpperRight = new pocket(table.x + table.width, 0);
-					pocketBottomLeft = new pocket(table.x, table.height);
-					pocketBottomMiddle = new pocket(table.x + table.width/2, table.height);
-					pocketBottomRight = new pocket(table.x + table.width, table.height);
+				//pockets
+				pockets = [
+					pocketUpperLeft = new pocket(0, 0),
+					pocketUpperMiddle = new pocket(table.width/2, 0),
+					pocketUpperRight = new pocket(table.width, 0),
+					pocketBottomLeft = new pocket(0, table.height),
+					pocketBottomMiddle = new pocket(table.width/2, table.height),
+					pocketBottomRight = new pocket(table.width, table.height) ];
 				animate();
 				setInterval(checker, 33);
 			}
@@ -114,10 +117,14 @@
 				animate();
 			}
 		}
+		//animate functions
 		function animate(){
 			clearCanvas();
 			for(i=0;i<balls.length;i++) {
 				balls[i].draw();
+			}
+			for(i=0;i<pockets.length;i++) {
+				pockets[i].draw();
 			}
 		}
 		function clearCanvas(){
