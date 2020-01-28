@@ -21,24 +21,19 @@
 		// canvas varibles
 		var table = document.getElementById("table");
 		var ctx = table.getContext("2d");
-		// this function creats the array of poolballs
-		var game;
-
-		//document.onload = "game = true"
-		var pocketSize = 50; //made global so we can easily adjust for all pockets
-		function x(){
+		function getX(){
 			//return the x coordinate of something
 		}
-		function width(){
+		function getWidth(){
 			//returns width of object
 		}
-		function height(){
+		function getHeight(){
 			//returns height of object
 		}//these functions needed to get dimensions of table
 
 		var balls = [];
 		//balls = startgame(game,balls);
-	//	function startGame(eightBall) {
+		function startGame(eightBall) {
 			//if selected game is false it is nine ball pool, and if it is true, it is eight ball pool
 			if(eightBall){
 				//array of balls
@@ -60,12 +55,13 @@
 					fourteenBall = new ball (150,220,"green",false,14,0,0),
 					fifthteenBall = new ball (120,205,"brown",false,15,0,0),
 					queueBall = new ball (600,175,"white",true,0,0,0)];
+					//pockets
 					pocketUpperLeft = new pocket(table.x, 0);
 					pocketUpperMiddle = new pocket(table.x + table.width/2, 0);
-					pocketUpperRight = new pocket(table.x + table.width - pocketSize, 0);
-					pocketBottomLeft = new pocket(table.x, table.height - pocketSize);
-					pocketBottomMiddle = new pocket(table.x + table.width/2, table.height - pocketSize);
-					pocketBottomRight = new pocket(table.x + table.width - pocketSize, table.height - pocketSize);
+					pocketUpperRight = new pocket(table.x + table.width, 0);
+					pocketBottomLeft = new pocket(table.x, table.height);
+					pocketBottomMiddle = new pocket(table.x + table.width/2, table.height);
+					pocketBottomRight = new pocket(table.x + table.width, table.height);
 				animate();
 				setInterval(checker, 33);
 			}else{
@@ -81,21 +77,28 @@
 					eightBall = new ball (180,205,"black",true,8,0,0),
 					nineBall = new ball (180,175,"yellow",false,9,0,0),
 					queueBall = new ball (600,175,"white",true,0,0,0)];
+					//pockets 
+					pocketUpperLeft = new pocket(table.x, 0);
+					pocketUpperMiddle = new pocket(table.x + table.width/2, 0);
+					pocketUpperRight = new pocket(table.x + table.width, 0);
+					pocketBottomLeft = new pocket(table.x, table.height);
+					pocketBottomMiddle = new pocket(table.x + table.width/2, table.height);
+					pocketBottomRight = new pocket(table.x + table.width, table.height);
 				animate();
 				setInterval(checker, 33);
 			}
-
-		function pocket(x, y,){
+		}
+		// pocket consuctor
+		function pocket(x, y){
 			this.x = x;
 			this.y = y;
-			this.color = black;
+			this.color = "black";
+			this.radius = 25
 			this.draw = function(){
-			this.width = pocketSize;
-			this.height = pocketSize;
-			this.draw = function(){
-				context.fillStyle = this.color;
-        context.fillRect(this.x, this.y, this.width, this.height);
-			}
+				ctx.fillStyle = this.color;
+				ctx.beginPath();
+				ctx.arc(this.x,this.y,this.radius,0,2*Math.PI);
+				ctx.fill();
 			}
 		}
 		//this is where the magic happens
