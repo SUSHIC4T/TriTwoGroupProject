@@ -64,9 +64,7 @@
 					pocketBottomLeft = new pocket(0, table.height),
 					pocketBottomMiddle = new pocket(table.width/2, table.height),
 					pocketBottomRight = new pocket(table.width, table.height) ];
-
-				animate();
-				setInterval(checker, 33);
+				setInterval(animate, 33);
 			}else{
 				//array of balls
 				balls = [
@@ -88,8 +86,7 @@
 					pocketBottomLeft = new pocket(0, table.height),
 					pocketBottomMiddle = new pocket(table.width/2, table.height),
 					pocketBottomRight = new pocket(table.width, table.height) ];
-				animate();
-				setInterval(checker, 33);
+				setInterval(animate, 33);
 			}
 		}
 		// pocket consuctor
@@ -114,7 +111,6 @@
 				}
 			}
 			if (stopBalls) {
-				animate();
 			}
 		}
 		//animate functions
@@ -132,7 +128,13 @@
 			ctx.fillRect(0,0,700,350);
 		}
 		function collisitonCheck(b1,b2) {
-
+			// this colloisition takes the x value then finds the corasponing distance the Y should be to ensure collisition
+			var xSide = Math.abs(b1.x-b2.y);
+			var ySide = Math.abs(b1.y-b2.y);
+			var radCheck = Math.sqr(Math.power(xSide,2) + Math.power(ySide,2));
+			if( radCheck < b1.radius + b2.radius) {
+				return true;
+			}
 		}
 		// ball constructor
 		function ball (x,y,color,solid,Bn,v,a) {
