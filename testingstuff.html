@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head></head>
+		<style>
+		#table {
+			width: 700px;
+			height: 350px;
+			border: 3px solid black;
+			background-color: green;
+		}
+    </style>
+  <body>
+		<canvas id="table" width="700" height="350"> </canvas>
+  </body>
+  <script>
+	var balls = [];
+	balls = [
+		oneBall = new ball (240,175,"yellow",true,1,0,0),
+		twoBall = new ball (180,205,"blue",true,2,0,0),
+		threeBall = new ball (180,145,"red",true,3,0,0),
+		fourBall = new ball (120,115,"purple",true,4,0,0),
+		fiveBall = new ball (120,175,"orange",true,5,0,0),
+		sixBall = new ball (150,190,"green",true,6,0,0),
+		sevenBall = new ball (120,235,"brown",true,7,0,0),
+		eightBall = new ball (180,175,"black",true,8,0,0)]
+		function practiceCueObj(pos, color){
+			this.color = color;
+			this.width = 100;
+			this.height = 25; //may need to play around with size
+			this.draw = function(){
+				ctx.fillStyle = this.color;
+				ctx.fillRect(20, 20, this.width, this.height);
+			}
+		}
+		function ball (x,y,color,solid,Bn,v,a) {
+			this.color = color;
+			this.x = x;
+			this.y = y;
+			this.solid = solid;
+			this.ballNum = Bn;
+			this.xcel = a;
+			this.vel = v;
+			this.mass;
+			//draw method
+			this.draw = function (){
+				if(this.solid) {
+					ctx.fillStyle = this.color;
+					ctx.beginPath();
+					ctx.arc(this.x,this.y,15,0,2*Math.PI);
+					ctx.fill();
+					ctx.fillStyle = "white";
+					ctx.beginPath();
+					ctx.arc(this.x + 5,this.y - 5,3,0,2*Math.PI);
+					ctx.fill();
+				}else{
+					ctx.fillStyle = "white"
+					ctx.beginPath();
+					ctx.arc(this.x,this.y,15,0,2*Math.PI);
+					ctx.fill();
+					ctx.fillStyle = this.color;
+					ctx.fillRect(this.x - 8, this.y - 12, 16, 24);
+				}
+			}
+		}
+		function TraverseAndSendToCollisionDetector(){
+			for( i = 0, i < balls.length, i++){
+				for( u = 0, u < pockets.length, u++){
+				if(practiceCheckingForCollisionsWithBorder(balls[i], pocket[u])){
+					//bounce off border
+				}
+				if(practiceCheckingForCollisionWithPocket(balls[i])){
+					score()//we need to make this
+				}
+			}
+		}
+	}
+
+		function practiceCheckingForCollisionWithPocket(b1,b2){
+	// this colloisition takes the x value then finds the corasponing distance the Y should be to ensure collisition
+		var xSide = Math.abs(b1.x-b2.y);
+		var ySide = Math.abs(b1.y-b2.y);
+		var radCheck = Math.sqr(Math.pow(xSide,2) + Math.pow(ySide,2));
+		if( radCheck < b1.radius + b2.radius) {
+				return true;
+	}
+}
+		}
+		function practiceCheckingForCollisionsWithBorder(obj){
+			return ( obj.x < 0 || obj.x + obj.width > canvas.width
+  		|| obj.y < 0 || obj.y + obj.height > canvas.height)
+
+			}
+
+		}
+  </script>
+</html

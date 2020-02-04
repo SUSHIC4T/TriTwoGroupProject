@@ -21,6 +21,7 @@
 		// canvas varibles
 		var table = document.getElementById("table");
 		var ctx = table.getContext("2d");
+
 		function getX(){
 			//return the x coordinate of something
 		}
@@ -77,7 +78,7 @@
 					eightBall = new ball (180,205,"black",true,8,0,0),
 					nineBall = new ball (180,175,"yellow",false,9,0,0),
 					queueBall = new ball (600,175,"white",true,0,0,0)];
-				//pockets 
+				//pockets
 				pockets = [
 					pocketUpperLeft = new pocket(0, 0),
 					pocketUpperMiddle = new pocket(table.width/2, 0),
@@ -126,7 +127,24 @@
 			ctx.fillStyle = "#00AF00";
 			ctx.fillRect(0,0,700,350);
 		}
-		function collisitonCheck(b1,b2) {
+		function TraverseAndSendToCollisionDetector(){ //where should we call this?
+			for (i = 0, i < balls.length, i++){
+				for ( u = 0, u < pockets.length, u++){
+				if(CheckingForCollisionsWithPocket(balls[i], pocket[u])){
+					//bounce off border --> need the physics for this!
+
+				}
+				if(CheckingForCollisionsWithBorder(balls[i])){
+					score()//we need to make this function. Should count a score and maybe congradulate scorer?
+				}
+			}
+		}
+	}
+	function CheckingForCollisionsWithBorder(obj){
+		return ( obj.x < 0 || obj.x + obj.width > canvas.width
+		|| obj.y < 0 || obj.y + obj.height > canvas.height)
+		}
+		function CheckingForCollisionWithPocket(b1,b2) {
 			// this colloisition takes the x value then finds the corasponing distance the Y should be to ensure collisition
 			var xSide = Math.abs(b1.x-b2.y);
 			var ySide = Math.abs(b1.y-b2.y);
@@ -134,6 +152,13 @@
 			if( radCheck < b1.radius + b2.radius) {
 				return true;
 			}
+		}
+		function score(){
+			scorecount++; //need to define this variable somehwere, should it be global?
+			alert("Nice shot!") // or text that appears 
+			if(scorecount == 8){ //but should depend on game
+				gameover();//or what do we want to do where
+				}
 		}
 		// ball constructor
 		function ball (x,y,color,solid,Bn,v,a) {
