@@ -65,17 +65,30 @@
 		function TraverseAndSendToCollisionDetector(){
 			for( i = 0, i < balls.length, i++){
 				for( u = 0, u < pockets.length, u++){
-				practiceCheckingForCollisions(balls[i], pocket[u]);
-				practiceCheckingForCollisionsWithBorder(balls[i]);
+				if(practiceCheckingForCollisionsWithBorder(balls[i], pocket[u])){
+					//bounce off border
+				}
+				if(practiceCheckingForCollisionWithPocket(balls[i])){
+					score()//we need to make this
+				}
 			}
 		}
 	}
 
-		function practiceCheckingForCollisions(obj1, obj2){
-			//collision code
+		function practiceCheckingForCollisionWithPocket(b1,b2){
+	// this colloisition takes the x value then finds the corasponing distance the Y should be to ensure collisition
+		var xSide = Math.abs(b1.x-b2.y);
+		var ySide = Math.abs(b1.y-b2.y);
+		var radCheck = Math.sqr(Math.pow(xSide,2) + Math.pow(ySide,2));
+		if( radCheck < b1.radius + b2.radius) {
+				return true;
+	}
+}
 		}
 		function practiceCheckingForCollisionsWithBorder(obj){
-		//check collision with border
+			return ( obj.x < 0 || obj.x + obj.width > canvas.width
+  		|| obj.y < 0 || obj.y + obj.height > canvas.height)
+
 			}
 
 		}
