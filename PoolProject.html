@@ -130,7 +130,7 @@
 			// this colloisition takes the x value then finds the corasponing distance the Y should be to ensure collisition
 			var xSide = Math.abs(b1.x-b2.y);
 			var ySide = Math.abs(b1.y-b2.y);
-			var radCheck = Math.sqr(Math.power(xSide,2) + Math.power(ySide,2));
+			var radCheck = Math.sqr(Math.pow(xSide,2) + Math.pow(ySide,2));
 			if( radCheck < b1.radius + b2.radius) {
 				return true;
 			}
