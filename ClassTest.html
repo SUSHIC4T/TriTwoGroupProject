@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+	<html>
+		<style>canvas { border: 2px solid red;} </style>
+		<body>
+
+			<canvas width=400 height=300 id="myCanvas"></canvas>
+			<p id="demo"></p>
+			
+		</body>
+
+	<script>
+		var canvas = document.getElementById("myCanvas");
+		var ctx = canvas.getContext("2d");
+
+		var first = new ball(100,50,"black",true,0,12,0,.5);
+		var second = new ball(200,50,"red",true,0,0,0,.5);
+		function collisitonCheck(b1,b2) {
+			// this colloisition takes the x value then finds the corasponing distance the Y should be to ensure collisition
+			var xSide = Math.abs(b1.x-b2.x);
+			var ySide = Math.abs(b1.y-b2.y);
+			var radCheck = Math.sqrt(Math.pow(xSide,2) + Math.pow(ySide,2));
+			if( radCheck < b1.radius + b2.radius) {
+				return true;
+			}
+		}
+		setInterval( animate, 50 );
+		function animate(){
+			clearCanvas();
+			if(collisitonCheck(first,second)){
+				second.xVel = (first.xVel)*(4/5);
+				first.xVel = (first.xVel)/5
+			}
+			first.move();
+			second.move();
+			first.draw();
+			second.draw();
+		}
+		function clearCanvas(){
+			ctx.fillStyle = "white";
+			ctx.fillRect(0,0,400,300);
+		}
+		function ball (x,y,color,solid,Bn,vx,vy,a) {
+			this.color = color;
+			this.x = x;
+			this.y = y;
+			this.solid = solid;
+			this.ballNum = Bn;
+			this.xcel = a;
+			this.xVel = vx;
+			this.yVel = vy;
+			this.mass = .5;
+			this.radius = 15;
+			this.goRight = true;
+			this.goLeft = false;
+			this.goUp = false;
+			this.goDown = false;
+			//draw method
+			this.draw = function (){
+					ctx.fillStyle = this.color;
+					ctx.beginPath();
+					ctx.arc(this.x,this.y,this.radius,0,2*Math.PI);
+					ctx.fill();
+			}
+			//these methods are for the direction the ball is moving, the ball can be moving diagonally so its ok to have two or one or none true at once
+			this.movRight = function(){
+				if(this.xVel > 0){
+					this.goRight = true;
+				}else{
+					this.goRight = false;
+				}
+			}
+			this.movLeft = function(){
+				if(this.xVel < 0){
+					this.goLeft = true;
+				}else{
+					this.goLeft = false;
+				}
+			}
+			this.movUp = function(){
+				if(this.yVel < 0){
+					this.goUp = true;
+				}else{
+					this.goUp = false;
+				}
+			}
+			this.movDown = function(){
+				if(this.yVel > 0){
+					this.goDown = true;
+				}else{
+					this.goDown = false;
+				}
+			}
+			this.move = function(){
+				this.x = this.x + this.xVel;
+				if(this.xVel > 0 && this.goRight){ 
+					this.xVel = this.xVel - this.xcel;
+				}
+				if(this.xVel < 0 && this.goRight){
+					this.xVel = 0
+					this.goRight = false;
+				}
+			}
+		}
+	</script>
+</html>

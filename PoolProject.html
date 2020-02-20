@@ -128,8 +128,8 @@
 			ctx.fillRect(0,0,700,350);
 		}
 		function TraverseAndSendToCollisionDetector(){ //where should we call this?
-			for (i = 0, i < balls.length, i++){
-				for ( u = 0, u < pockets.length, u++){
+			for (i = 0; i < balls.length; i++){
+				for ( u = 0; u < pockets.length; u++){
 				if(CheckingForCollisionsWithPocket(balls[i], pocket[u])){
 					//bounce off border --> need the physics for this!
 
@@ -139,7 +139,7 @@
 				}
 			}
 		}
-	}
+	} 
 	function CheckingForCollisionsWithBorder(obj){
 		return ( obj.x < 0 || obj.x + obj.width > canvas.width
 		|| obj.y < 0 || obj.y + obj.height > canvas.height)
