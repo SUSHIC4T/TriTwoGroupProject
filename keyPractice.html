@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			#canvas {
+				border: 3px solid black;
+				background-color: dodgerblue;
+			}
+
+		</style>
+		<meta charset="UTF-8">
+    </head>
+    <body>
+			<canvas id="canvas" width="160" height="550"></canvas>
+
+		</body>
+		<script>
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext("2d");
+		ctx.font = "30 px Arial";
+		ctx.strokeText("Ball Key", 20, 20);
+		ctx.fillText("1", 60, 55);
+		ctx.fillText("2", 60, 105);
+		ctx.fillText("3", 60, 155)
+		ctx.fillText("4", 60, 205);
+		ctx.fillText("5", 60, 250);
+		ctx.fillText("6", 60, 305);
+		ctx.fillText("7", 60, 350);
+		ctx.fillText("8-ball", 60, 400);
+		ctx.fillText("9", 60, 450);
+		ctx.fillText("QueueBall", 60, 500);
+		setInterval(animate, 33);
+		function animate(){
+			for(i=0;i<balls.length;i++) {
+				balls[i].draw();
+		}
+	}
+			var table = document.getElementById("table");
+			var balls = [];
+			balls = [
+				oneBall = new ball (20,50,"yellow",true,1,0,0),
+				twoBall = new ball (20,100,"blue",true,2,0,0),
+				threeBall = new ball (20,150,"red",true,3,0,0),
+				fourBall = new ball (20,200,"purple",true,4,0,0),
+				fiveBall = new ball (20,250,"orange",true,5,0,0),
+				sixBall = new ball (20,300,"green",true,6,0,0),
+				sevenBall = new ball (20,350,"brown",true,7,0,0),
+				eightBall = new ball (20,400,"black",true,8,0,0),
+				nineBall = new ball (20,450,"yellow",false,9,0,0),
+				queueBall = new ball (20,500,"white",true,0,0,0)];
+			function ball (x,y,color,solid,Bn,v,a) {
+				this.color = color;
+				this.x = x;
+				this.y = y;
+				this.solid = solid;
+				this.ballNum = Bn;
+				this.xcel = a;
+				this.vel = v;
+				this.mass;
+				//draw method
+				this.draw = function (){
+					if(this.solid) {
+						ctx.fillStyle = this.color;
+						ctx.beginPath();
+						ctx.arc(this.x,this.y,15,0,2*Math.PI);
+						ctx.fill();
+						ctx.fillStyle = "white";
+						ctx.beginPath();
+						ctx.arc(this.x + 5,this.y - 5,3,0,2*Math.PI);
+						ctx.fill();
+					}else{
+						ctx.fillStyle = "white"
+						ctx.beginPath();
+						ctx.arc(this.x,this.y,15,0,2*Math.PI);
+						ctx.fill();
+						ctx.fillStyle = this.color;
+						ctx.fillRect(this.x - 8, this.y - 12, 16,24);
+					}
+				}
+			}
+		</script>
+		</html>

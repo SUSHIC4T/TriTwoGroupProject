@@ -3,8 +3,6 @@
 	<head>
 		<style>
 			#table {
-				width: 700px;
-				height: 350px;
 				border: 3px solid black;
 				background-color: green;
 			}
@@ -16,21 +14,14 @@
 		<button onclick="startGame(true)">Click to play 8 ball pool</button>
 		<button onclick="startGame(false)">Click to play 9 ball pool</button>
 		<canvas id="table" width="700" height="350"> </canvas>
+		<canvas id="canvas" width="1000" height="500"> </canvas>
 	</body>
 	<script>
 		// canvas varibles
 		var table = document.getElementById("table");
 		var ctx = table.getContext("2d");
+		var canvas = document.getElementById("canvas");
 
-		function getX(){
-			//return the x coordinate of something
-		}
-		function getWidth(){
-			//returns width of object
-		}
-		function getHeight(){
-			//returns height of object
-		}//these functions needed to get dimensions of table
 
 		var balls = [];
 		//balls = startgame(game,balls);
@@ -65,6 +56,7 @@
 					pocketBottomMiddle = new pocket(table.width/2, table.height),
 					pocketBottomRight = new pocket(table.width, table.height) ];
 				setInterval(animate, 33);
+				TheCue = new cue();
 			}else{
 				//array of balls
 				balls = [
@@ -89,6 +81,7 @@
 				setInterval(animate, 33);
 			}
 		}
+
 		// pocket consuctor
 		function pocket(x, y){
 			this.x = x;
@@ -122,14 +115,15 @@
 			for(i=0;i<pockets.length;i++) {
 				pockets[i].draw();
 			}
+			TheCue.draw();
 		}
 		function clearCanvas(){
 			ctx.fillStyle = "#00AF00";
 			ctx.fillRect(0,0,700,350);
 		}
 		function TraverseAndSendToCollisionDetector(){ //where should we call this?
-			for (i = 0, i < balls.length, i++){
-				for ( u = 0, u < pockets.length, u++){
+			for (i = 0; i < balls.length; i++){
+				for ( u = 0; u < pockets.length; u++){
 				if(CheckingForCollisionsWithPocket(balls[i], pocket[u])){
 					//bounce off border --> need the physics for this!
 
@@ -155,9 +149,9 @@
 		}
 		function score(){
 			scorecount++; //need to define this variable somehwere, should it be global?
-			alert("Nice shot!") // or text that appears 
+			alert("Nice shot!") // or text that appears
 			if(scorecount == 8){ //but should depend on game
-				gameover();//or what do we want to do where
+				//for what do we want to do here
 				}
 		}
 		// ball constructor
@@ -189,6 +183,17 @@
 					ctx.fillStyle = this.color;
 					ctx.fillRect(this.x - 8, this.y - 12, 16,24);
 				}
+			}
+		}
+		function cue(){
+			this.color = "black";
+			this.x = table.width - 50;
+			this.y = table.height/2;
+			this.width = 100;
+			this.height = 10;
+			this.draw = function(){
+				ctx.fillStyle = this.color;
+				ctx.fillRect(this.x, this.y, this.width, this.height);
 			}
 		}
 	</script>

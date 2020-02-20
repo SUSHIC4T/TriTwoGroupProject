@@ -13,6 +13,7 @@
 		<canvas id="table" width="700" height="350"> </canvas>
   </body>
   <script>
+	canvas.addEventListener("mousemove", getangle)//make getangle function
 	var balls = [];
 	balls = [
 		oneBall = new ball (240,175,"yellow",true,1,0,0),
