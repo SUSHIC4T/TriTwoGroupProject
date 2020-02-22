@@ -6,6 +6,16 @@
 				border: 3px solid black;
 				background-color: green;
 			}
+			#canvas {
+				border: 3px solid black;
+				background-color: dodgerblue;
+				float: left;
+			}
+			#stripes {
+				border: 3px solid black;
+				background-color: dodgerblue;
+				float: right;
+			}
 		</style>
 		<meta charset="UTF-8">
 		<title>Pool Game</title>
@@ -13,15 +23,19 @@
 	<body>
 		<button onclick="startGame(true)">Click to play 8 ball pool</button>
 		<button onclick="startGame(false)">Click to play 9 ball pool</button>
+		<canvas id="canvas" width="130" height="550"></canvas>
 		<canvas id="table" width="700" height="350"> </canvas>
-		<canvas id="canvas" width="1000" height="500"> </canvas>
+		<canvas id="stripes" width ="130" height="550"</canvas>
+
 	</body>
 	<script>
 		// canvas varibles
 		var table = document.getElementById("table");
 		var ctx = table.getContext("2d");
 		var canvas = document.getElementById("canvas");
-
+		var key = canvas.getContext("2d");
+		var stripes = document.getElementById("stripes");
+		var ext = stripes.getContext("2d");
 
 		var balls = [];
 		//balls = startgame(game,balls);
@@ -48,15 +62,58 @@
 					fifthteenBall = new ball (120,205,"brown",false,15,0,0),
 					queueBall = new ball (600,175,"white",true,0,0,0)];
 				//pockets
-				pockets = [
+			/*	pockets = [
 					pocketUpperLeft = new pocket(0, 0),
 					pocketUpperMiddle = new pocket(table.width/2, 0),
 					pocketUpperRight = new pocket(table.width, 0),
 					pocketBottomLeft = new pocket(0, table.height),
 					pocketBottomMiddle = new pocket(table.width/2, table.height),
-					pocketBottomRight = new pocket(table.width, table.height) ];
+					pocketBottomRight = new pocket(table.width, table.height) ]; */
 				setInterval(animate, 33);
 				TheCue = new cue();
+				key.font = "30 px Arial";
+				key.strokeText("Eight Ball Key", 20, 20);
+				key.fillText("1", 60, 55);
+				key.fillText("2", 60, 105);
+				key.fillText("3", 60, 155)
+				key.fillText("4", 60, 205);
+				key.fillText("5", 60, 250);
+				key.fillText("6", 60, 305);
+				key.fillText("7", 60, 350);
+				key.fillText("8", 60, 400);
+				ext.fillText("9", 60, 55);
+				ext.fillText("10", 60, 105);
+				ext.fillText("11", 60, 155);
+				ext.fillText("12", 60, 200);
+				ext.fillText("13", 60, 250);
+				ext.fillText("14", 60, 305);
+				ext.fillText("15", 60, 355);
+				ext.fillText("QueueBall", 60, 405);
+				setInterval(makeKey, 1);
+				function makeKey(){
+					for(i=0;i<balls.length;i++) {
+						ballkey[i].Edrawkeyballs();
+				}
+			}
+					var table = document.getElementById("table");
+					var ballkey = [];
+					ballkey = [
+						oneBall = new ball (20,50,"yellow",true,1,0,0),
+						twoBall = new ball (20,100,"blue",true,2,0,0),
+						threeBall = new ball (20,150,"red",true,3,0,0),
+						fourBall = new ball (20,200,"purple",true,4,0,0),
+						fiveBall = new ball (20,250,"orange",true,5,0,0),
+						sixBall = new ball (20,300,"green",true,6,0,0),
+						sevenBall = new ball (20,350,"brown",true,7,0,0),
+						eightBall = new ball (20,400,"black",true,8,0,0),
+						nineBall = new ball (20,50,"yellow",false,9,0,0),
+						tenBall = new ball (20,100,"blue",false,10,0,0),
+						elevenBall = new ball (20,150,"red",false,11,0,0),
+						twelveBall = new ball (20,200,"purple",false,12,0,0),
+						thirteenBall = new ball (20,250,"orange",false,13,0,0),
+						fourteenBall = new ball (20,300,"green",false,14,0,0),
+						fifthteenBall = new ball (20,350,"brown",false,15,0,0),
+						queueBall = new ball (20,400,"white",true,0,0,0)];
 			}else{
 				//array of balls
 				balls = [
@@ -71,16 +128,48 @@
 					nineBall = new ball (180,175,"yellow",false,9,0,0),
 					queueBall = new ball (600,175,"white",true,0,0,0)];
 				//pockets
-				pockets = [
+			/*	pockets = [
 					pocketUpperLeft = new pocket(0, 0),
 					pocketUpperMiddle = new pocket(table.width/2, 0),
 					pocketUpperRight = new pocket(table.width, 0),
 					pocketBottomLeft = new pocket(0, table.height),
 					pocketBottomMiddle = new pocket(table.width/2, table.height),
-					pocketBottomRight = new pocket(table.width, table.height) ];
+					pocketBottomRight = new pocket(table.width, table.height) ]; */
 				setInterval(animate, 33);
+				key.font = "30 px Arial";
+				key.strokeText("Nine Ball Key", 20, 20);
+				key.fillText("1", 60, 55);
+				key.fillText("2", 60, 105);
+				key.fillText("3", 60, 155)
+				key.fillText("4", 60, 205);
+				key.fillText("5", 60, 250);
+				key.fillText("6", 60, 305);
+				key.fillText("7", 60, 350);
+				key.fillText("8-ball", 60, 400);
+				key.fillText("9", 60, 450);
+				key.fillText("QueueBall", 60, 500);
+				setInterval(makeKey, 1);
+				function makeKey(){
+					for(i=0;i<balls.length;i++) {
+						ballkey[i].Ndrawkeyballs();
+				}
+			}
+					var table = document.getElementById("table");
+					var ballkey = [];
+					ballkey = [
+						oneBall = new ball (20,50,"yellow",true,1,0,0),
+						twoBall = new ball (20,100,"blue",true,2,0,0),
+						threeBall = new ball (20,150,"red",true,3,0,0),
+						fourBall = new ball (20,200,"purple",true,4,0,0),
+						fiveBall = new ball (20,250,"orange",true,5,0,0),
+						sixBall = new ball (20,300,"green",true,6,0,0),
+						sevenBall = new ball (20,350,"brown",true,7,0,0),
+						eightBall = new ball (20,400,"black",true,8,0,0),
+						nineBall = new ball (20,450,"yellow",false,9,0,0),
+						queueBall = new ball (20,500,"white",true,0,0,0)];
 			}
 		}
+
 
 		// pocket consuctor
 		function pocket(x, y){
@@ -133,7 +222,7 @@
 				}
 			}
 		}
-	} 
+	}
 	function CheckingForCollisionsWithBorder(obj){
 		return ( obj.x < 0 || obj.x + obj.width > canvas.width
 		|| obj.y < 0 || obj.y + obj.height > canvas.height)
@@ -182,6 +271,44 @@
 					ctx.fill();
 					ctx.fillStyle = this.color;
 					ctx.fillRect(this.x - 8, this.y - 12, 16,24);
+				}
+			}
+			this.Ndrawkeyballs = function (){
+				if(this.solid) {
+					key.fillStyle = this.color;
+					key.beginPath();
+					key.arc(this.x,this.y,15,0,2*Math.PI);
+					key.fill();
+					key.fillStyle = "white";
+					key.beginPath();
+					key.arc(this.x + 5,this.y - 5,3,0,2*Math.PI);
+					key.fill();
+				}else{
+					key.fillStyle = "white"
+					key.beginPath();
+					key.arc(this.x,this.y,15,0,2*Math.PI);
+					key.fill();
+					key.fillStyle = this.color;
+					key.fillRect(this.x - 8, this.y - 12, 16,24);
+				}
+			}
+			this.Edrawkeyballs = function (){
+				if(this.solid) {
+					key.fillStyle = this.color;
+					key.beginPath();
+					key.arc(this.x,this.y,15,0,2*Math.PI);
+					key.fill();
+					key.fillStyle = "white";
+					key.beginPath();
+					key.arc(this.x + 5,this.y - 5,3,0,2*Math.PI);
+					key.fill();
+				}else{
+					ext.fillStyle = "white"
+					ext.beginPath();
+					ext.arc(this.x,this.y,15,0,2*Math.PI);
+					ext.fill();
+					ext.fillStyle = this.color;
+					ext.fillRect(this.x - 8, this.y - 12, 16,24);
 				}
 			}
 		}
