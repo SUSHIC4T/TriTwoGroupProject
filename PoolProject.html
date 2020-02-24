@@ -38,6 +38,7 @@
 		var ext = stripes.getContext("2d");
 
 		var balls = [];
+		var TheCue = new cue();
 		//balls = startgame(game,balls);
 		function startGame(eightBall) {
 			//if selected game is false it is nine ball pool, and if it is true, it is eight ball pool
@@ -62,7 +63,7 @@
 					fifthteenBall = new ball (120,205,"brown",false,15,0,0),
 					queueBall = new ball (600,175,"white",true,0,0,0)];
 				//pockets
-			/*	pockets = [
+		/*		pockets = [
 					pocketUpperLeft = new pocket(0, 0),
 					pocketUpperMiddle = new pocket(table.width/2, 0),
 					pocketUpperRight = new pocket(table.width, 0),
@@ -80,7 +81,7 @@
 				key.fillText("5", 60, 250);
 				key.fillText("6", 60, 305);
 				key.fillText("7", 60, 350);
-				key.fillText("8", 60, 400);
+				key.fillText("8-ball", 60, 400);
 				ext.fillText("9", 60, 55);
 				ext.fillText("10", 60, 105);
 				ext.fillText("11", 60, 155);
@@ -127,6 +128,7 @@
 					eightBall = new ball (180,205,"black",true,8,0,0),
 					nineBall = new ball (180,175,"yellow",false,9,0,0),
 					queueBall = new ball (600,175,"white",true,0,0,0)];
+					TheCue = new cue();
 				//pockets
 			/*	pockets = [
 					pocketUpperLeft = new pocket(0, 0),
@@ -145,7 +147,7 @@
 				key.fillText("5", 60, 250);
 				key.fillText("6", 60, 305);
 				key.fillText("7", 60, 350);
-				key.fillText("8", 60, 400);
+				key.fillText("8-ball", 60, 400);
 				ext.fillText("9", 60, 55);
 				ext.fillText("10", 60, 105);
 				ext.fillText("11", 60, 155);
@@ -213,9 +215,9 @@
 			for(i=0;i<balls.length;i++) {
 				balls[i].draw();
 			}
-			for(i=0;i<pockets.length;i++) {
+		/*	for(i=0;i<pockets.length;i++) {
 				pockets[i].draw();
-			}
+			} */
 			TheCue.draw();
 		}
 		function clearCanvas(){
@@ -330,10 +332,36 @@
 			this.y = table.height/2;
 			this.width = 100;
 			this.height = 10;
+			this.angle = 0;
+
 			this.draw = function(){
+				if(balls.length == 0)
+				  return;
+				this.x = 50;//balls[balls.length - 1].x + 0;
+				this.y = -this.height/2;;// balls[balls.length - 1].y - this.height/2;
 				ctx.fillStyle = this.color;
-				ctx.fillRect(this.x, this.y, this.width, this.height);
+				console.log(this.angle);
+				 if(this.angle == undefined)
+				 	ctx.fillRect(this.x, this.y, this.width, this.height);
+				 else {
+					ctx.save();
+					ctx.translate(balls[balls.length -1].x, balls[balls.length - 1].y);
+					ctx.rotate(this.angle);
+					ctx.fillRect(this.x, this.y, this.width, this.height);
+					ctx.restore();
+				// }
 			}
 		}
+	}
+		table.addEventListener("mousemove", function(evt){
+			var mX = evt.clientX; var mY = evt.clientY;
+			var rect = evt.target.getBoundingClientRect();
+			mX = mX - rect.left;
+			var delx = mX - balls[balls.length - 1].x;
+			var dely = mY - balls[balls.length - 1].y;
+			var theta = Math.atan2(dely, delx);
+			TheCue.angle = theta;
+			TheCue.draw();
+		});
 	</script>
 </html>
