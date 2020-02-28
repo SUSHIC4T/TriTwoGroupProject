@@ -13,24 +13,12 @@
 		var canvas = document.getElementById("myCanvas");
 		var ctx = canvas.getContext("2d");
 
-		var first = new ball(100,50,"black",true,0,12,0,.5);
-		var second = new ball(200,50,"red",true,0,0,0,.5);
-		function collisitonCheck(b1,b2) {
-			// this colloisition takes the x value then finds the corasponing distance the Y should be to ensure collisition
-			var xSide = Math.abs(b1.x-b2.x);
-			var ySide = Math.abs(b1.y-b2.y);
-			var radCheck = Math.sqrt(Math.pow(xSide,2) + Math.pow(ySide,2));
-			if( radCheck < b1.radius + b2.radius) {
-				return true;
-			}
-		}
-		setInterval( animate, 50 );
+		var first = new ball(130,160,"black",true,0,5,-1,.05);
+		var second = new ball(200,150,"red",true,0,0,0,.05);
+		setInterval( animate, 30 );
 		function animate(){
 			clearCanvas();
-			if(collisitonCheck(first,second)){
-				second.xVel = (first.xVel)*(4/5);
-				first.xVel = (first.xVel)/5
-			}
+			first.collideWithBall(second);
 			first.move();
 			second.move();
 			first.draw();
@@ -54,7 +42,7 @@
 			this.goRight = true;
 			this.goLeft = false;
 			this.goUp = false;
-			this.goDown = false;
+			this.goDown = true;
 			//draw method
 			this.draw = function (){
 					ctx.fillStyle = this.color;
@@ -62,37 +50,7 @@
 					ctx.arc(this.x,this.y,this.radius,0,2*Math.PI);
 					ctx.fill();
 			}
-			//these methods are for the direction the ball is moving, the ball can be moving diagonally so its ok to have two or one or none true at once
-			this.movRight = function(){
-				if(this.xVel > 0){
-					this.goRight = true;
-				}else{
-					this.goRight = false;
-				}
-			}
-			this.movLeft = function(){
-				if(this.xVel < 0){
-					this.goLeft = true;
-				}else{
-					this.goLeft = false;
-				}
-			}
-			this.movUp = function(){
-				if(this.yVel < 0){
-					this.goUp = true;
-				}else{
-					this.goUp = false;
-				}
-			}
-			this.movDown = function(){
-				if(this.yVel > 0){
-					this.goDown = true;
-				}else{
-					this.goDown = false;
-				}
-			}
 			this.move = function(){
-				this.x = this.x + this.xVel;
 				if(this.xVel > 0 && this.goRight){ 
 					this.xVel = this.xVel - this.xcel;
 				}
@@ -100,7 +58,98 @@
 					this.xVel = 0
 					this.goRight = false;
 				}
+				if(this.yVel > 0 && this.goDown) {
+					this.yVel = this.yVel - this.xcel;
+				}
+				if(this.yVel < 0 && this.goDown){
+					this.yVel = 0;
+					this.goDown = false;
+				}
+				if(this.xVel < 0 && this.goLeft){ 
+					this.xVel = this.xVel + this.xcel;
+				}
+				if(this.xVel > 0 && this.goLeft){
+					this.xVel = 0
+					this.goLeft = false;
+				}
+				if(this.yVel < 0 && this.goUp) {
+					this.yVel = this.yVel + this.xcel;
+				}
+				if(this.yVel > 0 && this.goUp){
+					this.yVel = 0;
+					this.goUp = false;
+				}
+				this.x = this.x + this.xVel;
+				this.y = this.y + this.yVel;
 			}
-		}
+		this.collideWithBall = function(ball) {
+			//find a normal vector 
+			var normX = this.x - ball.x;
+			var normY = this.y - ball.y;
+			//find distance
+			var xSide = Math.abs(this.x-ball.x);
+			var ySide = Math.abs(this.y-ball.y);
+			var radCheck = Math.sqrt(Math.pow(xSide,2) + Math.pow(ySide,2));
+			if( radCheck > this.radius + ball.radius) {
+				return false;
+			}
+			//find minimun translation distance
+			var minTransDistX = normX * (((this.radius + ball.radius)-radCheck)/ radCheck);
+			var minTransDistY = normY * (((this.radius + ball.radius)-radCheck)/ radCheck);
+			//push/pull balls apart
+			this.x = this.x + (minTransDistX/2);
+			this.y = this.y + (minTransDistY/2);
+			ball.x = ball.x - (minTransDistX/2);
+			ball.y = ball.y - (minTransDistY/2);
+			//find unit normal vector
+			var unitNormX = normX*(1/(this.radius + ball.radius));
+			var unitNormY = normY*(1/(this.radius + ball.radius));
+			//find unit tangent vector
+			var unitTanX = unitNormY * -1;
+			var unitTanY = unitNormX;
+			//Project velocities onto the unit normal and unit tanget vectors 
+			var velFirstNorm = (unitNormX * this.xVel) + (unitNormY * this.yVel);
+			var velFirstTan = (unitTanX * this.xVel) + (unitTanY * this.yVel);
+			var velSecondNorm = (unitNormX * ball.xVel) + (unitNormY * ball.yVel);
+			var velSecondTan = (unitTanX * ball.xVel) + (unitTanY * ball.yVel);
+			//find new normal velocities after collisistion
+			var  newVelFirstNorm =  velSecondNorm;
+			var  newVelSecondNorm = velFirstNorm;
+			//convert the scalar normal and tangental velocites into vectors
+			var newVelVectFirstNormX = newVelFirstNorm * unitNormX;
+			var newVelVectFirstNormY = newVelFirstNorm * unitNormY;
+			var newVelVectFirstTanX = velFirstTan * unitTanX;
+			var newVelVectFirstTanY = velFirstTan * unitTanY;
+			var newVelVectSecondNormX = newVelSecondNorm * unitNormX;
+			var newVelVectSecondNormY = newVelSecondNorm * unitNormY;
+			var newVelVectSecondTanX = velSecondTan * unitTanX;
+			var newVelVectSecondTanY = velSecondTan * unitTanY;
+			//Update velocites
+			this.xVel = newVelVectFirstNormX + newVelVectFirstTanX;
+			this.yVel = newVelVectFirstNormY + newVelVectFirstTanY;
+			ball.xVel = newVelVectSecondNormX + newVelVectSecondTanX;
+			ball.yVel = newVelVectSecondNormY + newVelVectSecondTanY;
+			if(this.xVel > 0){
+				this.goRight = true;
+			} else if(this.xVel < 0) {
+				this.goLeft = true;
+			}
+			if(ball.xVel > 0){
+				ball.goRight = true;
+			} else if(ball.xVel < 0) {
+				ball.goLeft = true;
+			}
+			if(this.yVel > 0){
+				this.goDown = true;
+			} else if(this.yVel < 0) {
+				this.goUp = true;
+			}
+			if(ball.yVel > 0){
+				ball.goDown = true;
+			} else if(ball.yVel < 0) {
+				ball.goUp = true;
+			}
+		}	
+	}
 	</script>
 </html>

@@ -9,12 +9,21 @@
 			#canvas {
 				border: 3px solid black;
 				background-color: dodgerblue;
+				margin: 10px;
 				float: left;
 			}
 			#stripes {
 				border: 3px solid black;
 				background-color: dodgerblue;
-				float: right;
+				margin: 10px;
+				position: relative;
+				float: left;
+			}
+			#scoreboard {
+				border: 3px solid black;
+				background-color: maroon;
+				margin: 10px;
+				float: bottom;
 			}
 		</style>
 		<meta charset="UTF-8">
@@ -23,53 +32,76 @@
 	<body>
 		<button onclick="startGame(true)">Click to play 8 ball pool</button>
 		<button onclick="startGame(false)">Click to play 9 ball pool</button>
-		<canvas id="canvas" width="130" height="550"></canvas>
+		<canvas id="canvas" width="110" height="430"></canvas>
 		<canvas id="table" width="700" height="350"> </canvas>
-		<canvas id="stripes" width ="130" height="550"</canvas>
+		<canvas id="stripes" width ="110" height="430"></canvas>
+		<canvas id="scoreboard" width="220" height="110"></canvas>
 
 	</body>
 	<script>
-		// canvas varibles
+		// global varibles
 		var table = document.getElementById("table");
 		var ctx = table.getContext("2d");
 		var canvas = document.getElementById("canvas");
 		var key = canvas.getContext("2d");
 		var stripes = document.getElementById("stripes");
 		var ext = stripes.getContext("2d");
-
+		var scoreboard = document.getElementById("scoreboard");
+		var score = scoreboard.getContext("2d")
 		var balls = [];
+		var TheCue = new cue();
+		var stick = new Image();
+		stick.src = "stick.png";
+
+
+
 		//balls = startgame(game,balls);
+		function paintScoreboard(){
+		//	score.write.fontColor("yellow");
+			score.font = "15px Times New Roman";
+			var balltype1 = "Stripes";
+			var balltype2 = "Solids";
+			score.fillText("SCOREBOARD", 80, 20);
+			score.fillText("Player 1:", 40, 45);
+			score.fillText("Player 2:", 40, 80);
+			score.fillText(balltype1, 100, 45);
+			score.fillText(balltype2, 100, 80);
+//need to define ball types as vaiables!!!
+		}
 		function startGame(eightBall) {
 			//if selected game is false it is nine ball pool, and if it is true, it is eight ball pool
 			if(eightBall){
+				Player1 = new player(1, eightBall);
+				Player2 = new player(2, eightBall);
 				//array of balls
 				//this array sets the positions for a the start of the game
 				balls = [
-					oneBall = new ball (240,175,"yellow",true,1,0,0),
-					twoBall = new ball (180,205,"blue",true,2,0,0),
-					threeBall = new ball (180,145,"red",true,3,0,0),
-					fourBall = new ball (120,115,"purple",true,4,0,0),
-					fiveBall = new ball (120,175,"orange",true,5,0,0),
-					sixBall = new ball (150,190,"green",true,6,0,0),
-					sevenBall = new ball (120,235,"brown",true,7,0,0),
-					eightBall = new ball (180,175,"black",true,8,0,0),
-					nineBall = new ball (210,160,"yellow",false,9,0,0),
-					tenBall = new ball (210,190,"blue",false,10,0,0),
-					elevenBall = new ball (150,130,"red",false,11,0,0),
-					twelveBall = new ball (120,145,"purple",false,12,0,0),
-					thirteenBall = new ball (150,160,"orange",false,13,0,0),
-					fourteenBall = new ball (150,220,"green",false,14,0,0),
-					fifthteenBall = new ball (120,205,"brown",false,15,0,0),
-					queueBall = new ball (600,175,"white",true,0,0,0)];
+					oneBall = new ball (240,175,"yellow",true,1,0,0,.2),
+					twoBall = new ball (180,205,"blue",true,2,0,0,.2),
+					threeBall = new ball (180,145,"red",true,3,0,0,.2),
+					fourBall = new ball (120,115,"purple",true,4,0,0,.2),
+					fiveBall = new ball (120,175,"orange",true,5,0,0,.2),
+					sixBall = new ball (150,190,"green",true,6,0,0,.2),
+					sevenBall = new ball (120,235,"brown",true,7,0,0,.2),
+					eightBall = new ball (180,175,"black",true,8,0,0,.2),
+					nineBall = new ball (210,160,"yellow",false,9,0,0,.2),
+					tenBall = new ball (210,190,"blue",false,10,0,0,.2),
+					elevenBall = new ball (150,130,"red",false,11,0,0,.2),
+					twelveBall = new ball (120,145,"purple",false,12,0,0,.2),
+					thirteenBall = new ball (150,160,"orange",false,13,0,0,.2),
+					fourteenBall = new ball (150,220,"green",false,14,0,0,.2),
+					fifthteenBall = new ball (120,205,"brown",false,15,0,0,.2),
+					queueBall = new ball (600,175,"white",true,0,0,0,.2)];
 				//pockets
-				pockets = [
+				/*pockets = [
 					pocketUpperLeft = new pocket(0, 0),
 					pocketUpperMiddle = new pocket(table.width/2, 0),
 					pocketUpperRight = new pocket(table.width, 0),
 					pocketBottomLeft = new pocket(0, table.height),
 					pocketBottomMiddle = new pocket(table.width/2, table.height),
 					pocketBottomRight = new pocket(table.width, table.height) ]; 
-				setInterval(animate, 33);
+					*/
+				setInterval(animate, 60);
 				TheCue = new cue();
 				key.font = "30 px Arial";
 				key.strokeText("Key", 20, 20);
@@ -80,7 +112,7 @@
 				key.fillText("5", 60, 250);
 				key.fillText("6", 60, 305);
 				key.fillText("7", 60, 350);
-				key.fillText("8", 60, 400);
+				key.fillText("8-ball", 60, 400);
 				ext.fillText("9", 60, 55);
 				ext.fillText("10", 60, 105);
 				ext.fillText("11", 60, 155);
@@ -89,53 +121,57 @@
 				ext.fillText("14", 60, 305);
 				ext.fillText("15", 60, 355);
 				ext.fillText("QueueBall", 60, 405);
-				setInterval(makeKey, 1);
+				setInterval(makeKey, 20);
 				function makeKey(){
-					for(i=0;i<balls.length;i++) {
-						ballkey[i].Edrawkeyballs();
+				for(i=0;i<balls.length;i++) {
+					ballkey[i].Edrawkeyballs();
 				}
 			}
-					var table = document.getElementById("table");
 					var ballkey = [];
 					ballkey = [
-						oneBall = new ball (20,50,"yellow",true,1,0,0),
-						twoBall = new ball (20,100,"blue",true,2,0,0),
-						threeBall = new ball (20,150,"red",true,3,0,0),
-						fourBall = new ball (20,200,"purple",true,4,0,0),
-						fiveBall = new ball (20,250,"orange",true,5,0,0),
-						sixBall = new ball (20,300,"green",true,6,0,0),
-						sevenBall = new ball (20,350,"brown",true,7,0,0),
-						eightBall = new ball (20,400,"black",true,8,0,0),
-						nineBall = new ball (20,50,"yellow",false,9,0,0),
-						tenBall = new ball (20,100,"blue",false,10,0,0),
-						elevenBall = new ball (20,150,"red",false,11,0,0),
-						twelveBall = new ball (20,200,"purple",false,12,0,0),
-						thirteenBall = new ball (20,250,"orange",false,13,0,0),
-						fourteenBall = new ball (20,300,"green",false,14,0,0),
-						fifthteenBall = new ball (20,350,"brown",false,15,0,0),
-						queueBall = new ball (20,400,"white",true,0,0,0)];
+						oneBall = new ball (20,50,"yellow",true,1,0,0,0),
+						twoBall = new ball (20,100,"blue",true,2,0,0,0),
+						threeBall = new ball (20,150,"red",true,3,0,0,0),
+						fourBall = new ball (20,200,"purple",true,4,0,0,0),
+						fiveBall = new ball (20,250,"orange",true,5,0,0,0),
+						sixBall = new ball (20,300,"green",true,6,0,0,0),
+						sevenBall = new ball (20,350,"brown",true,7,0,0,0),
+						eightBall = new ball (20,400,"black",true,8,0,0,0),
+						nineBall = new ball (20,50,"yellow",false,9,0,0,0),
+						tenBall = new ball (20,100,"blue",false,10,0,0,0),
+						elevenBall = new ball (20,150,"red",false,11,0,0,0),
+						twelveBall = new ball (20,200,"purple",false,12,0,0,0),
+						thirteenBall = new ball (20,250,"orange",false,13,0,0,0),
+						fourteenBall = new ball (20,300,"green",false,14,0,0,0),
+						fifthteenBall = new ball (20,350,"brown",false,15,0,0,0),
+						queueBall = new ball (20,400,"white",true,0,0,0,0)];
 			}else{
+				Player1 = new player(1, eightBall);
+				Player2 = new player(2, eightBall); //bc eightball is a variable for then
+				//game type right?
 				//array of balls
 				balls = [
-					oneBall = new ball (240,175,"yellow",true,1,0,0),
-					twoBall = new ball (120,175,"blue",true,2,0,0),
-					threeBall = new ball (210,160,"red",true,3,0,0),
-					fourBall = new ball (150,190,"purple",true,4,0,0),
-					fiveBall = new ball (210,190,"orange",true,5,0,0),
-					sixBall = new ball (150,160,"green",true,6,0,0),
-					sevenBall = new ball (180,145,"brown",true,7,0,0),
-					eightBall = new ball (180,205,"black",true,8,0,0),
-					nineBall = new ball (180,175,"yellow",false,9,0,0),
-					queueBall = new ball (600,175,"white",true,0,0,0)];
+					oneBall = new ball (240,175,"yellow",true,1,0,0,.2),
+					twoBall = new ball (120,175,"blue",true,2,0,0,.2),
+					threeBall = new ball (210,160,"red",true,3,0,0,.2),
+					fourBall = new ball (150,190,"purple",true,4,0,0,.2),
+					fiveBall = new ball (210,190,"orange",true,5,0,0,.2),
+					sixBall = new ball (150,160,"green",true,6,0,0,.2),
+					sevenBall = new ball (180,145,"brown",true,7,0,0,.2),
+					eightBall = new ball (180,205,"black",true,8,0,0,.2),
+					nineBall = new ball (180,175,"yellow",false,9,0,0,.2),
+					queueBall = new ball (600,175,"white",true,0,0,0,.2)];
+					TheCue = new cue();
 				//pockets
-				pockets = [
+				/*pockets = [
 					pocketUpperLeft = new pocket(0, 0),
 					pocketUpperMiddle = new pocket(table.width/2, 0),
 					pocketUpperRight = new pocket(table.width, 0),
 					pocketBottomLeft = new pocket(0, table.height),
 					pocketBottomMiddle = new pocket(table.width/2, table.height),
 					pocketBottomRight = new pocket(table.width, table.height) ]; 
-				setInterval(animate, 33);
+					*/
+				setInterval(animate, 60);
 				key.font = "30 px Arial";
 				key.strokeText("Key", 20, 20);
 				key.fillText("1", 60, 55);
@@ -145,7 +181,7 @@
 				key.fillText("5", 60, 250);
 				key.fillText("6", 60, 305);
 				key.fillText("7", 60, 350);
-				key.fillText("8", 60, 400);
+				key.fillText("8-ball", 60, 400);
 				ext.fillText("9", 60, 55);
 				ext.fillText("10", 60, 105);
 				ext.fillText("11", 60, 155);
@@ -154,31 +190,31 @@
 				ext.fillText("14", 60, 305);
 				ext.fillText("15", 60, 355);
 				ext.fillText("QueueBall", 60, 405);
-				setInterval(makeKey, 1);
+				setInterval(makeKey, 20);
 				function makeKey(){
 					for(i=0;i<balls.length;i++) {
 						ballkey[i].Edrawkeyballs();
+					}
 				}
-			}
-					var table = document.getElementById("table");
-					var ballkey = [];
-					ballkey = [
-						oneBall = new ball (20,50,"yellow",true,1,0,0),
-						twoBall = new ball (20,100,"blue",true,2,0,0),
-						threeBall = new ball (20,150,"red",true,3,0,0),
-						fourBall = new ball (20,200,"purple",true,4,0,0),
-						fiveBall = new ball (20,250,"orange",true,5,0,0),
-						sixBall = new ball (20,300,"green",true,6,0,0),
-						sevenBall = new ball (20,350,"brown",true,7,0,0),
-						eightBall = new ball (20,400,"black",true,8,0,0),
-						nineBall = new ball (20,50,"yellow",false,9,0,0),
-						tenBall = new ball (20,100,"blue",false,10,0,0),
-						elevenBall = new ball (20,150,"red",false,11,0,0),
-						twelveBall = new ball (20,200,"purple",false,12,0,0),
-						thirteenBall = new ball (20,250,"orange",false,13,0,0),
-						fourteenBall = new ball (20,300,"green",false,14,0,0),
-						fifthteenBall = new ball (20,350,"brown",false,15,0,0),
-						queueBall = new ball (20,400,"white",true,0,0,0)];
+				var table = document.getElementById("table");
+				var ballkey = [];
+				ballkey = [
+					oneBall = new ball (20,50,"yellow",true,1,0,0,0),
+					twoBall = new ball (20,100,"blue",true,2,0,0,0),
+					threeBall = new ball (20,150,"red",true,3,0,0,0),
+					fourBall = new ball (20,200,"purple",true,4,0,0,0),
+					fiveBall = new ball (20,250,"orange",true,5,0,0,0),
+					sixBall = new ball (20,300,"green",true,6,0,0,0),
+					sevenBall = new ball (20,350,"brown",true,7,0,0,0),
+					eightBall = new ball (20,400,"black",true,8,0,0,0),
+					nineBall = new ball (20,50,"yellow",false,9,0,0,0),
+					tenBall = new ball (20,100,"blue",false,10,0,0,0),
+					elevenBall = new ball (20,150,"red",false,11,0,0,0),
+					twelveBall = new ball (20,200,"purple",false,12,0,0,0),
+					thirteenBall = new ball (20,250,"orange",false,13,0,0,0),
+					fourteenBall = new ball (20,300,"green",false,14,0,0,0),
+					fifthteenBall = new ball (20,350,"brown",false,15,0,0,0),
+					queueBall = new ball (20,400,"white",true,0,0,0,0)];
 			}
 		}
 
@@ -196,6 +232,11 @@
 				ctx.fill();
 			}
 		}
+		function player(num, type){
+			this.score = 0;
+			this.playernum = num;
+			this.gametype = type;
+		}
 		//this is where the magic happens
 		function checker(){
 			var stopBalls = true;
@@ -207,16 +248,25 @@
 			if (stopBalls) {
 			}
 		}
-		//animate functions
 		function animate(){
 			clearCanvas();
+			
+			for(i=0;i<balls.length;i++) {
+				for(p=i+1; p < balls.length ; p++) {
+					balls[i].collideWithBall(balls[p]);
+				}
+			}
+			for(i=0;i<balls.length;i++) {
+				balls[i].move();
+			}
 			for(i=0;i<balls.length;i++) {
 				balls[i].draw();
 			}
-			for(i=0;i<pockets.length;i++) {
+		/*	for(i=0;i<pockets.length;i++) {
 				pockets[i].draw();
-			}
+			} */
 			TheCue.draw();
+			paintScoreboard();
 		}
 		function clearCanvas(){
 			ctx.fillStyle = "#00AF00";
@@ -225,19 +275,19 @@
 		function TraverseAndSendToCollisionDetector(){ //where should we call this?
 			for (i = 0; i < balls.length; i++){
 				for ( u = 0; u < pockets.length; u++){
-				if(CheckingForCollisionsWithPocket(balls[i], pocket[u])){
-					//bounce off border --> need the physics for this!
+					if(CheckingForCollisionsWithPocket(balls[i], pocket[u])){
+						//bounce off border --> need the physics for this!
 
-				}
-				if(CheckingForCollisionsWithBorder(balls[i])){
-					score()//we need to make this function. Should count a score and maybe congradulate scorer?
-				}
+					}
+					if(CheckingForCollisionsWithBorder(balls[i])){
+						score()//we need to make this function. Should count a score and maybe congradulate scorer?
+					}
+				}	
 			}
 		}
-	}
-	function CheckingForCollisionsWithBorder(obj){
-		return ( obj.x < 0 || obj.x + obj.width > canvas.width
-		|| obj.y < 0 || obj.y + obj.height > canvas.height)
+		function CheckingForCollisionsWithBorder(obj){
+			return ( obj.x < 0 || obj.x + obj.width > canvas.width
+			|| obj.y < 0 || obj.y + obj.height > canvas.height)
 		}
 		function CheckingForCollisionWithPocket(b1,b2) {
 			// this colloisition takes the x value then finds the corasponing distance the Y should be to ensure collisition
@@ -256,15 +306,22 @@
 				}
 		}
 		// ball constructor
-		function ball (x,y,color,solid,Bn,v,a) {
+		function ball (x,y,color,solid,Bn,vx,vy,a) {
 			this.color = color;
 			this.x = x;
 			this.y = y;
 			this.solid = solid;
 			this.ballNum = Bn;
 			this.xcel = a;
-			this.vel = v;
+			this.xVel = vx;
+			this.yVel = vy;
 			this.mass;
+			this.radius = 15;
+			//these are true for testing, they will ned to be all false when we finish
+			this.goRight = false;
+			this.goLeft = true;
+			this.goUp = false;
+			this.goDown = false;
 			//draw method
 			this.draw = function (){
 				if(this.solid) {
@@ -285,23 +342,105 @@
 					ctx.fillRect(this.x - 8, this.y - 12, 16,24);
 				}
 			}
-			this.Ndrawkeyballs = function (){
-				if(this.solid) {
-					key.fillStyle = this.color;
-					key.beginPath();
-					key.arc(this.x,this.y,15,0,2*Math.PI);
-					key.fill();
-					key.fillStyle = "white";
-					key.beginPath();
-					key.arc(this.x + 5,this.y - 5,3,0,2*Math.PI);
-					key.fill();
-				}else{
-					key.fillStyle = "white"
-					key.beginPath();
-					key.arc(this.x,this.y,15,0,2*Math.PI);
-					key.fill();
-					key.fillStyle = this.color;
-					key.fillRect(this.x - 8, this.y - 12, 16,24);
+			this.move = function(){
+				if(this.xVel > 0 && this.goRight){ 
+					this.xVel = this.xVel - this.xcel;
+				}
+				if(this.xVel < 0 && this.goRight){
+					this.xVel = 0
+					this.goRight = false;
+				}
+				if(this.yVel > 0 && this.goDown) {
+					this.yVel = this.yVel - this.xcel;
+				}
+				if(this.yVel < 0 && this.goDown){
+					this.yVel = 0;
+					this.goDown = false;
+				}
+				if(this.xVel < 0 && this.goLeft){ 
+					this.xVel = this.xVel + this.xcel;
+				}
+				if(this.xVel > 0 && this.goLeft){
+					this.xVel = 0
+					this.goLeft = false;
+				}
+				if(this.yVel < 0 && this.goUp) {
+					this.yVel = this.yVel + this.xcel;
+				}
+				if(this.yVel > 0 && this.goUp){
+					this.yVel = 0;
+					this.goUp = false;
+				}
+				this.x = this.x + this.xVel;
+				this.y = this.y + this.yVel;
+			}
+			this.collideWithBall = function(ball) {
+				//find a normal vector 
+				var normX = this.x - ball.x;
+				var normY = this.y - ball.y;
+				//find distance
+				var xSide = Math.abs(this.x-ball.x);
+				var ySide = Math.abs(this.y-ball.y);
+				var radCheck = Math.sqrt(Math.pow(xSide,2) + Math.pow(ySide,2));
+				if( radCheck > this.radius + ball.radius) {
+					return false;
+				}
+				//find minimun translation distance
+				var minTransDistX = normX * (((this.radius + ball.radius)-radCheck)/ radCheck);
+				var minTransDistY = normY * (((this.radius + ball.radius)-radCheck)/ radCheck);
+				//push/pull balls apart
+				this.x = this.x + (minTransDistX/2);
+				this.y = this.y + (minTransDistY/2);
+				ball.x = ball.x - (minTransDistX/2);
+				ball.y = ball.y - (minTransDistY/2);
+				//find unit normal vector
+				var unitNormX = normX*(1/(radCheck));
+				var unitNormY = normY*(1/(radCheck));
+				//find unit tangent vector
+				var unitTanX = unitNormY * -1;
+				var unitTanY = unitNormX;
+				//Project velocities onto the unit normal and unit tanget vectors 
+				var velFirstNorm = (unitNormX * this.xVel) + (unitNormY * this.yVel);
+				var velFirstTan = (unitTanX * this.xVel) + (unitTanY * this.yVel);
+				var velSecondNorm = (unitNormX * ball.xVel) + (unitNormY * ball.yVel);
+				var velSecondTan = (unitTanX * ball.xVel) + (unitTanY * ball.yVel);
+				//find new normal velocities after collisistion
+				var  newVelFirstNorm =  velSecondNorm;
+				var  newVelSecondNorm = velFirstNorm;
+				//convert the scalar normal and tangental velocites into vectors
+				var newVelVectFirstNormX = newVelFirstNorm * unitNormX;
+				var newVelVectFirstNormY = newVelFirstNorm * unitNormY;
+				var newVelVectFirstTanX = velFirstTan * unitTanX;
+				var newVelVectFirstTanY = velFirstTan * unitTanY;
+				var newVelVectSecondNormX = newVelSecondNorm * unitNormX;
+				var newVelVectSecondNormY = newVelSecondNorm * unitNormY;
+				var newVelVectSecondTanX = velSecondTan * unitTanX;
+				var newVelVectSecondTanY = velSecondTan * unitTanY;
+				//Update velocites
+				this.xVel = newVelVectFirstNormX + newVelVectFirstTanX;
+				this.yVel = newVelVectFirstNormY + newVelVectFirstTanY;
+				ball.xVel = newVelVectSecondNormX + newVelVectSecondTanX;
+				ball.yVel = newVelVectSecondNormY + newVelVectSecondTanY;
+				console.log(this.yVel);
+				if(this.xVel > 0){
+					this.goRight = true;
+				} else if(this.xVel < 0) {
+					this.goLeft = true;
+				}
+				if(ball.xVel > 0){
+					ball.goRight = true;
+				} else if(ball.xVel < 0) {
+					ball.goLeft = true;
+				}
+				if(this.yVel > 0){
+					this.goDown = true;
+				} else if(this.yVel < 0) {
+					this.goUp = true;
+				}
+				if(ball.yVel > 0){
+					ball.goDown = true;
+				} else if(ball.yVel < 0) {
+					ball.goUp = true;
 				}
 			}
 			this.Edrawkeyballs = function (){
@@ -328,12 +467,38 @@
 			this.color = "black";
 			this.x = table.width - 50;
 			this.y = table.height/2;
-			this.width = 100;
-			this.height = 10;
+			this.height = 20;
 			this.draw = function(){
+				if(balls.length == 0)
+				  return;
+				this.x = 50;//balls[balls.length - 1].x + 0;
+				this.y = -this.height/2;;// balls[balls.length - 1].y - this.height/2;
 				ctx.fillStyle = this.color;
-				ctx.fillRect(this.x, this.y, this.width, this.height);
+				 if(this.angle == undefined)
+				 	ctx.drawImage(stick, table.width - 50, table.height/2);
+				 else {
+					ctx.save();
+					ctx.translate(balls[balls.length -1].x, balls[balls.length - 1].y);
+					ctx.rotate(this.angle);
+					ctx.drawImage(stick, this.x, this.y);
+					ctx.restore();
+				// }
+				}
 			}
 		}
+		table.addEventListener("mousemove", function(evt){
+			var mX = evt.clientX; var mY = evt.clientY;
+			var rect = evt.target.getBoundingClientRect();
+			mX = mX - rect.left;
+			mY = mY - rect.top - 5;
+			var delx = mX - balls[balls.length - 1].x;
+			var dely = mY - balls[balls.length - 1].y;
+			var theta = Math.atan2(-dely, -delx);
+			TheCue.angle = theta;
+			TheCue.draw();
+		});
+		table.addEventListener("click", function(evt){
+
+		})
 	</script>
 </html>
