@@ -41,6 +41,7 @@
 	<script>
 		// global varibles
 		var table = document.getElementById("table");
+		var tableWidth = table.width;
 		var ctx = table.getContext("2d");
 		var canvas = document.getElementById("canvas");
 		var key = canvas.getContext("2d");
@@ -51,6 +52,10 @@
 		var balls = [];
 		var TheCue = new cue();
 		var stick = new Image();
+		var gameInterval = setInterval(dud,1000000000);
+		function dud () { 
+			// this is supose to do nothing
+		}
 		stick.src = "stick.png";
 		//balls = startgame(game,balls);
 		function paintScoreboard(){
@@ -66,6 +71,7 @@
 		//need to define ball types as vaiables!!!
 		}
 		function startGame(eightBall) {
+			clearInterval(gameInterval);
 			//if selected game is false it is nine ball pool, and if it is true, it is eight ball pool
 			if(eightBall){
 				Player1 = new player(1, eightBall);
@@ -88,17 +94,16 @@
 					thirteenBall = new ball (150,160,"orange",false,13,0,0),
 					fourteenBall = new ball (150,220,"green",false,14,0,0),
 					fifthteenBall = new ball (120,205,"brown",false,15,0,0),
-					queueBall = new ball (600,175,"white",true,0,-10,0,)];
+					queueBall = new ball (600,175,"white",true,0,-10,0)];
 				//pockets
-				/*pockets = [
+				pockets = [
 					pocketUpperLeft = new pocket(0, 0),
-					pocketUpperMiddle = new pocket(table.width/2, 0),
-					pocketUpperRight = new pocket(table.width, 0),
-					pocketBottomLeft = new pocket(0, table.height),
-					pocketBottomMiddle = new pocket(table.width/2, table.height),
-					pocketBottomRight = new pocket(table.width, table.height) ]; 
-					*/
-				setInterval(animate, 60);
+					pocketUpperMiddle = new pocket( tableWidth / 2, 0),
+					pocketUpperRight = new pocket( 700, 0),
+					pocketBottomLeft = new pocket(0, 350),
+					pocketBottomMiddle = new pocket( 700 / 2, 350),
+					pocketBottomRight = new pocket( 700, 350) ]; 
+				gameInterval = setInterval(animate, 15);
 				TheCue = new cue();
 				key.font = "30 px Arial";
 				key.strokeText("Key", 20, 20);
@@ -157,18 +162,17 @@
 					sevenBall = new ball (180,145,"brown",true,7,0,0,),
 					eightBall = new ball (180,205,"black",true,8,0,0,),
 					nineBall = new ball (180,175,"yellow",false,9,0,0,),
-					queueBall = new ball (600,175,"white",true,0,0,0,)];
+					queueBall = new ball (600,175,"white",true,0,-10,0)];
 					TheCue = new cue();
 				//pockets
-				/*pockets = [
+				pockets = [
 					pocketUpperLeft = new pocket(0, 0),
-					pocketUpperMiddle = new pocket(table.width/2, 0),
-					pocketUpperRight = new pocket(table.width, 0),
-					pocketBottomLeft = new pocket(0, table.height),
-					pocketBottomMiddle = new pocket(table.width/2, table.height),
-					pocketBottomRight = new pocket(table.width, table.height) ]; 
-					*/
-				setInterval(animate, 60);
+					pocketUpperMiddle = new pocket( 700 / 2, 0),
+					pocketUpperRight = new pocket( 700, 0),
+					pocketBottomLeft = new pocket(0, 350),
+					pocketBottomMiddle = new pocket( 700 / 2, 350),
+					pocketBottomRight = new pocket( 700, 350) ]; 
+				gameInterval = setInterval(animate, 15);
 				key.font = "30 px Arial";
 				key.strokeText("Key", 20, 20);
 				key.fillText("1", 60, 55);
@@ -214,8 +218,6 @@
 					queueBall = new ball (20,400,"white",true,0,0,0)];
 			}
 		}
-
-
 		// pocket consuctor
 		function pocket(x, y){
 			this.x = x;
@@ -248,9 +250,17 @@
 		function animate(){
 			clearCanvas();
 			
-			for(i=0;i<balls.length;i++) {
-				for(p=i+1; p < balls.length ; p++) {
+			for(i = 0;i<balls.length - 1;i++) {
+				for(p = i + 1; p < balls.length ; p++) {
 					balls[i].collideWithBall(balls[p]);
+				}
+			}
+			for(i=0 ; i < balls.length ; i++) {
+				balls[i].collideWithWall();
+			}
+			for(i=0 ; i < balls.length ; i++) {
+				for ( p = 0; p < pockets.length; p++) {
+					balls[i].collideWithPocket(pockets[p]);
 				}
 			}
 			for(i=0;i<balls.length;i++) {
@@ -259,9 +269,9 @@
 			for(i=0;i<balls.length;i++) {
 				balls[i].draw();
 			}
-		/*	for(i=0;i<pockets.length;i++) {
+			for(i=0;i<pockets.length;i++) {
 				pockets[i].draw();
-			} */
+			}
 			TheCue.draw();
 			paintScoreboard();
 		}
@@ -309,7 +319,9 @@
 			this.y = y;
 			this.solid = solid;
 			this.ballNum = Bn;
-			this.xcel = .02;
+			this.accerationConst = .0196;
+			this.xcel = 0;
+			this.ycel = 0;
 			this.xVel = vx;
 			this.yVel = vy;
 			this.mass;
@@ -317,7 +329,7 @@
 			//these are true for testing, they will ned to be all false when we finish
 			this.goRight = false;
 			this.goLeft = true;
-			this.goUp = false;
+			this.goUp = true;
 			this.goDown = false;
 			//draw method
 			this.draw = function (){
@@ -348,7 +360,7 @@
 					this.goRight = false;
 				}
 				if(this.yVel > 0 && this.goDown) {
-					this.yVel = this.yVel - this.xcel;
+					this.yVel = this.yVel - this.ycel;
 				}
 				if(this.yVel < 0 && this.goDown){
 					this.yVel = 0;
@@ -362,7 +374,7 @@
 					this.goLeft = false;
 				}
 				if(this.yVel < 0 && this.goUp) {
-					this.yVel = this.yVel + this.xcel;
+					this.yVel = this.yVel + this.ycel;
 				}
 				if(this.yVel > 0 && this.goUp){
 					this.yVel = 0;
@@ -419,6 +431,54 @@
 				ball.xVel = newVelVectSecondNormX + newVelVectSecondTanX;
 				ball.yVel = newVelVectSecondNormY + newVelVectSecondTanY;
 				console.log(this.yVel);
+				
+				//update Acceleration and direction of motion
+				// this is from the x to the hypotinuse
+				var angle;
+				if( this.xVel > 0 && this.yVel > 0) {
+					angle = Math.atan(this.yVel/this.xVel);
+					this.xcel = this.accerationConst * Math.cos(angle);
+					this.ycel = this.accerationConst * Math.sin(angle);
+				}
+				if( this.xVel < 0 && this.yVel > 0) {
+					angle = Math.atan(this.yVel/this.xVel);
+					angle *= -1;
+					this.xcel = this.accerationConst * Math.cos(angle);
+					this.ycel = this.accerationConst * Math.sin(angle);
+				}
+				if( this.xVel < 0 && this.yVel < 0) {
+					angle = Math.atan(this.yVel/this.xVel);
+					this.xcel = this.accerationConst * Math.cos(angle);
+					this.ycel = this.accerationConst * Math.sin(angle);
+				}
+				if( this.xVel > 0 && this.yVel < 0) {
+					angle = Math.atan(this.yVel/this.xVel);
+					angle *= -1;
+					this.xcel = this.accerationConst * Math.cos(angle);
+					this.ycel = this.accerationConst * Math.sin(angle);
+				}
+				if( ball.xVel > 0 && ball.yVel > 0) {
+					angle = Math.atan(ball.yVel/ball.xVel);
+					ball.xcel = ball.accerationConst * Math.cos(angle);
+					ball.ycel = ball.accerationConst * Math.sin(angle);
+				}
+				if( ball.xVel < 0 && ball.yVel > 0) {
+					angle = Math.atan(ball.yVel/ball.xVel);
+					angle *= -1;
+					ball.xcel = this.accerationConst * Math.cos(angle);
+					ball.ycel = this.accerationConst * Math.sin(angle);
+				}
+				if( ball.xVel < 0 && ball.yVel < 0) {
+					angle = Math.atan(ball.yVel/ball.xVel);
+					ball.xcel = ball.accerationConst * Math.cos(angle);
+					ball.ycel = ball.accerationConst * Math.sin(angle);
+				}
+				if( ball.xVel > 0 && ball.yVel < 0) {
+					angle = Math.atan(ball.yVel/ball.xVel);
+					angle *= -1;
+					ball.xcel = this.accerationConst * Math.cos(angle);
+					ball.ycel = this.accerationConst * Math.sin(angle);
+				}
 				if(this.xVel > 0){
 					this.goRight = true;
 				} else if(this.xVel < 0) {
@@ -459,6 +519,45 @@
 					ext.fillRect(this.x - 8, this.y - 12, 16,24);
 				}
 			}
+			this.collideWithWall = function(){
+				if(this.x + this.radius > table.width && this.goRight) {
+					this.xVel *= -1;
+					this.x = table.width - this.radius - 1;
+					this.goRight = false;
+					this.goLeft = true;
+				}
+				if(this.x - this.radius < 0 && this.goLeft) {
+					this.xVel *= -1;
+					this.x = this.radius + 1;
+					this.goRight = true;
+					this.goLeft = false;
+				}
+				if(this.y + this.radius > table.height && this.goDown) {
+					this.yVel *= -1;
+					this.y = table.height - this.radius - 1;
+					this.goDown = false;
+					this.goUp = true;
+				}
+				if(this.y - this.radius < 0 && this.goUp) {
+					this.yVel *= -1;
+					this.y = this.radius + 1;
+					this.goDown = true;
+					this.goUp = false;
+				}
+			}
+			this.collideWithPocket = function(pocket) {
+				var xSide = Math.abs(this.x-pocket.x);
+				var ySide = Math.abs(this.y-pocket.y);
+				var radCheck = Math.sqrt(Math.pow(xSide,2) + Math.pow(ySide,2));
+				if( radCheck > (this.radius/3) + pocket.radius) {
+					return false;
+				}
+				this.x = 67890;
+				this.y = 67890;
+				this.xVel = 0;
+				this.yVel = 0;
+				this.accerationConst = 0;
+			}
 		}
 		function cue(){
 			this.color = "black";
@@ -466,8 +565,9 @@
 			this.y = table.height/2;
 			this.height = 20;
 			this.draw = function(){
-				if(balls.length == 0)
+				if(balls.length == 0){
 				  return;
+				 }
 				this.x = 50;//balls[balls.length - 1].x + 0;
 				this.y = -this.height/2;;// balls[balls.length - 1].y - this.height/2;
 				ctx.fillStyle = this.color;
@@ -479,11 +579,13 @@
 					ctx.rotate(this.angle);
 					ctx.drawImage(stick, this.x, this.y);
 					ctx.restore();
-				// }
 				}
 			}
 		}
 		table.addEventListener("mousemove", function(evt){
+			if( balls.length == 0 ) { 
+				return;
+			}
 			var mX = evt.clientX; var mY = evt.clientY;
 			var rect = evt.target.getBoundingClientRect();
 			mX = mX - rect.left;
