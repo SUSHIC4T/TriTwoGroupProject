@@ -96,7 +96,7 @@
 					pocketUpperRight = new pocket(table.width, 0),
 					pocketBottomLeft = new pocket(0, table.height),
 					pocketBottomMiddle = new pocket(table.width/2, table.height),
-					pocketBottomRight = new pocket(table.width, table.height) ]; 
+					pocketBottomRight = new pocket(table.width, table.height) ];
 					*/
 				setInterval(animate, 60);
 				TheCue = new cue();
@@ -166,7 +166,7 @@
 					pocketUpperRight = new pocket(table.width, 0),
 					pocketBottomLeft = new pocket(0, table.height),
 					pocketBottomMiddle = new pocket(table.width/2, table.height),
-					pocketBottomRight = new pocket(table.width, table.height) ]; 
+					pocketBottomRight = new pocket(table.width, table.height) ];
 					*/
 				setInterval(animate, 60);
 				key.font = "30 px Arial";
@@ -247,7 +247,7 @@
 		}
 		function animate(){
 			clearCanvas();
-			
+
 			for(i=0;i<balls.length;i++) {
 				for(p=i+1; p < balls.length ; p++) {
 					balls[i].collideWithBall(balls[p]);
@@ -279,7 +279,7 @@
 					if(CheckingForCollisionsWithBorder(balls[i])){
 						score()//we need to make this function. Should count a score and maybe congradulate scorer?
 					}
-				}	
+				}
 			}
 		}
 		function CheckingForCollisionsWithBorder(obj){
@@ -340,7 +340,7 @@
 				}
 			}
 			this.move = function(){
-				if(this.xVel > 0 && this.goRight){ 
+				if(this.xVel > 0 && this.goRight){
 					this.xVel = this.xVel - this.xcel;
 				}
 				if(this.xVel < 0 && this.goRight){
@@ -354,7 +354,7 @@
 					this.yVel = 0;
 					this.goDown = false;
 				}
-				if(this.xVel < 0 && this.goLeft){ 
+				if(this.xVel < 0 && this.goLeft){
 					this.xVel = this.xVel + this.xcel;
 				}
 				if(this.xVel > 0 && this.goLeft){
@@ -372,7 +372,7 @@
 				this.y = this.y + this.yVel;
 			}
 			this.collideWithBall = function(ball) {
-				//find a normal vector 
+				//find a normal vector
 				var normX = this.x - ball.x;
 				var normY = this.y - ball.y;
 				//find distance
@@ -396,7 +396,7 @@
 				//find unit tangent vector
 				var unitTanX = unitNormY * -1;
 				var unitTanY = unitNormX;
-				//Project velocities onto the unit normal and unit tanget vectors 
+				//Project velocities onto the unit normal and unit tanget vectors
 				var velFirstNorm = (unitNormX * this.xVel) + (unitNormY * this.yVel);
 				var velFirstTan = (unitTanX * this.xVel) + (unitTanY * this.yVel);
 				var velSecondNorm = (unitNormX * ball.xVel) + (unitNormY * ball.yVel);
@@ -418,7 +418,6 @@
 				this.yVel = newVelVectFirstNormY + newVelVectFirstTanY;
 				ball.xVel = newVelVectSecondNormX + newVelVectSecondTanX;
 				ball.yVel = newVelVectSecondNormY + newVelVectSecondTanY;
-				console.log(this.yVel);
 				if(this.xVel > 0){
 					this.goRight = true;
 				} else if(this.xVel < 0) {
@@ -466,24 +465,34 @@
 			this.y = table.height/2;
 			this.height = 20;
 			this.draw = function(){
-				if(balls.length == 0)
+				if(balls.length == 0){
 				  return;
-				this.x = 50;//balls[balls.length - 1].x + 0;
-				this.y = -this.height/2;;// balls[balls.length - 1].y - this.height/2;
+				}
+				this.x = 50;
+				this.y = -this.height/2;
 				ctx.fillStyle = this.color;
-				 if(this.angle == undefined)
-				 	ctx.drawImage(stick, table.width - 50, table.height/2);
+				 if(this.angle == undefined) {
+				 	ctx.drawImage(stick, table.width - 50, table.height/2); }
 				 else {
 					ctx.save();
 					ctx.translate(balls[balls.length -1].x, balls[balls.length - 1].y);
 					ctx.rotate(this.angle);
 					ctx.drawImage(stick, this.x, this.y);
 					ctx.restore();
-				// }
 				}
 			}
+			this.moveIn = function(){
+				if(this.x > 15){
+					TheCue.draw();
+					this.x = this.x - 5;
+					TheCue.moveIn(); }
+				if(this.x == 15){
+				var p = 4;
+			}
 		}
+	}
 		table.addEventListener("mousemove", function(evt){
+			if(balls.length == 0) return;
 			var mX = evt.clientX; var mY = evt.clientY;
 			var rect = evt.target.getBoundingClientRect();
 			mX = mX - rect.left;
@@ -494,8 +503,6 @@
 			TheCue.angle = theta;
 			TheCue.draw();
 		});
-		table.addEventListener("click", function(evt){
-
-		})
+	table.addEventListener("click", TheCue.moveIn);
 	</script>
 </html>
