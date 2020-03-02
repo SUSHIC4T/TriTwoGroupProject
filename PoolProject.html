@@ -36,6 +36,9 @@
 		<canvas id="table" width="700" height="350"> </canvas>
 		<canvas id="stripes" width ="110" height="430"></canvas>
 		<canvas id="scoreboard" width="220" height="110"></canvas>
+    <br>
+		Power Slider:
+		<input id="speedSlider" type="range" min=0 max=20 value=10></input>
 
 	</body>
 	<script>
@@ -94,7 +97,7 @@
 					thirteenBall = new ball (150,160,"orange",false,13,0,0),
 					fourteenBall = new ball (150,220,"green",false,14,0,0),
 					fifthteenBall = new ball (120,205,"brown",false,15,0,0),
-					queueBall = new ball (600,175,"white",true,0,-10,0)];
+					queueBall = new ball (600,175,"white",true,0,0,0)];
 				//pockets
 				pockets = [
 					pocketUpperLeft = new pocket(0, 0),
@@ -579,18 +582,24 @@
 			}
 		}
 	}
+	var power = document.getElementById("speedSlider").value;
 
-	function red() {
-		console.log(TheCue.x);
+
+	function hitballwithCue() {
+
 		if(TheCue.x > 15){
 
 		//	TheCue.draw();
 			TheCue.x = TheCue.x - 5;
-			setTimeout(red, .001);
+			setTimeout(hitballwithCue, power);
 			//TheCue.moveIn();
 		}
 		if(TheCue.x <= 15){
-			var p = 4;
+			balls[balls.length - 1].xvel = -10;
+			balls[balls.length -1].goLeft = true;
+			console.log(balls[balls.length -1].xvel);
+
+
 			//TheCue.draw();
 			setTimeout(function(){
 				TheCue.x = 50;
@@ -614,6 +623,8 @@
 			TheCue.angle = theta;
 			TheCue.draw();
 		});
-	table.addEventListener("click", red);//TheCue.moveIn);
+	table.addEventListener("click", hitballwithCue);//TheCue.moveIn);
+
+
 	</script>
 </html>
