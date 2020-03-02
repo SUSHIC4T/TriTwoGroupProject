@@ -53,7 +53,7 @@
 		var TheCue = new cue();
 		var stick = new Image();
 		var gameInterval = setInterval(dud,1000000000);
-		function dud () { 
+		function dud () {
 			// this is supose to do nothing
 		}
 		stick.src = "stick.png";
@@ -64,8 +64,8 @@
 			var balltype1 = "Stripes";
 			var balltype2 = "Solids";
 			score.fillText("SCOREBOARD", 80, 20);
-			score.fillText("Player 1:", 40, 45);
-			score.fillText("Player 2:", 40, 80);
+			score.fillText("Player " + Player1.playernum + ":", 40, 45);
+			score.fillText("Player " + Player2.playernum + ":", 40, 80);
 			score.fillText(balltype1, 100, 45);
 			score.fillText(balltype2, 100, 80);
 		//need to define ball types as vaiables!!!
@@ -102,7 +102,7 @@
 					pocketUpperRight = new pocket( 700, 0),
 					pocketBottomLeft = new pocket(0, 350),
 					pocketBottomMiddle = new pocket( 700 / 2, 350),
-					pocketBottomRight = new pocket( 700, 350) ]; 
+					pocketBottomRight = new pocket( 700, 350) ];
 				gameInterval = setInterval(animate, 15);
 				TheCue = new cue();
 				key.font = "30 px Arial";
@@ -171,7 +171,7 @@
 					pocketUpperRight = new pocket( 700, 0),
 					pocketBottomLeft = new pocket(0, 350),
 					pocketBottomMiddle = new pocket( 700 / 2, 350),
-					pocketBottomRight = new pocket( 700, 350) ]; 
+					pocketBottomRight = new pocket( 700, 350) ];
 				gameInterval = setInterval(animate, 15);
 				key.font = "30 px Arial";
 				key.strokeText("Key", 20, 20);
@@ -249,7 +249,7 @@
 		}
 		function animate(){
 			clearCanvas();
-			
+
 			for(i = 0;i<balls.length - 1;i++) {
 				for(p = i + 1; p < balls.length ; p++) {
 					balls[i].collideWithBall(balls[p]);
@@ -278,23 +278,6 @@
 		function clearCanvas(){
 			ctx.fillStyle = "#00AF00";
 			ctx.fillRect(0,0,700,350);
-		}
-		function TraverseAndSendToCollisionDetector(){ //where should we call this?
-			for (i = 0; i < balls.length; i++){
-				for ( u = 0; u < pockets.length; u++){
-					if(CheckingForCollisionsWithPocket(balls[i], pocket[u])){
-						//bounce off border --> need the physics for this!
-
-					}
-					if(CheckingForCollisionsWithBorder(balls[i])){
-						score()//we need to make this function. Should count a score and maybe congradulate scorer?
-					}
-				}	
-			}
-		}
-		function CheckingForCollisionsWithBorder(obj){
-			return ( obj.x < 0 || obj.x + obj.width > canvas.width
-			|| obj.y < 0 || obj.y + obj.height > canvas.height)
 		}
 		function CheckingForCollisionWithPocket(b1,b2) {
 			// this colloisition takes the x value then finds the corasponing distance the Y should be to ensure collisition
@@ -352,7 +335,7 @@
 				}
 			}
 			this.move = function(){
-				if(this.xVel > 0 && this.goRight){ 
+				if(this.xVel > 0 && this.goRight){
 					this.xVel = this.xVel - this.xcel;
 				}
 				if(this.xVel < 0 && this.goRight){
@@ -366,7 +349,7 @@
 					this.yVel = 0;
 					this.goDown = false;
 				}
-				if(this.xVel < 0 && this.goLeft){ 
+				if(this.xVel < 0 && this.goLeft){
 					this.xVel = this.xVel + this.xcel;
 				}
 				if(this.xVel > 0 && this.goLeft){
@@ -384,7 +367,7 @@
 				this.y = this.y + this.yVel;
 			}
 			this.collideWithBall = function(ball) {
-				//find a normal vector 
+				//find a normal vector
 				var normX = this.x - ball.x;
 				var normY = this.y - ball.y;
 				//find distance
@@ -408,7 +391,7 @@
 				//find unit tangent vector
 				var unitTanX = unitNormY * -1;
 				var unitTanY = unitNormX;
-				//Project velocities onto the unit normal and unit tanget vectors 
+				//Project velocities onto the unit normal and unit tanget vectors
 				var velFirstNorm = (unitNormX * this.xVel) + (unitNormY * this.yVel);
 				var velFirstTan = (unitTanX * this.xVel) + (unitTanY * this.yVel);
 				var velSecondNorm = (unitNormX * ball.xVel) + (unitNormY * ball.yVel);
@@ -430,8 +413,7 @@
 				this.yVel = newVelVectFirstNormY + newVelVectFirstTanY;
 				ball.xVel = newVelVectSecondNormX + newVelVectSecondTanX;
 				ball.yVel = newVelVectSecondNormY + newVelVectSecondTanY;
-				console.log(this.yVel);
-				
+
 				//update Acceleration and direction of motion
 				// this is from the x to the hypotinuse
 				var angle;
@@ -562,18 +544,18 @@
 		}
 		function cue(){
 			this.color = "black";
-			this.x = table.width - 50;
+			this.x = 50;
 			this.y = table.height/2;
 			this.height = 20;
 			this.draw = function(){
 				if(balls.length == 0){
 				  return;
 				 }
-				this.x = 50;//balls[balls.length - 1].x + 0;
+			//	this.x = 50;//balls[balls.length - 1].x + 0;
 				this.y = -this.height/2;;// balls[balls.length - 1].y - this.height/2;
 				ctx.fillStyle = this.color;
-				 if(this.angle == undefined)
-				 	ctx.drawImage(stick, table.width - 50, table.height/2);
+				 if(this.angle == undefined) {
+				 	ctx.drawImage(stick, table.width - 50, table.height/2); }
 				 else {
 					ctx.save();
 					ctx.translate(balls[balls.length -1].x, balls[balls.length - 1].y);
@@ -582,9 +564,45 @@
 					ctx.restore();
 				}
 			}
+			this.moveIn = function(){
+				alert("who" + this.x)
+				if(this.x > 15){
+						alert("oh karp");
+					TheCue.draw();
+					this.x = this.x - 5;
+					TheCue.moveIn();
+				}
+				if(this.x <= 15){
+					var p = 4;
+					TheCue.draw();
+
+				//start ball movement. What should we do with cue?
+			}
 		}
+	}
+
+	function red() {
+		console.log(TheCue.x);
+		if(TheCue.x > 15){
+
+		//	TheCue.draw();
+			TheCue.x = TheCue.x - 5;
+			setTimeout(red, .001);
+			//TheCue.moveIn();
+		}
+		if(TheCue.x <= 15){
+			var p = 4;
+			//TheCue.draw();
+			setTimeout(function(){
+				TheCue.x = 50;
+			}, 1000);
+
+
+		//start ball movement. What should we do with cue?
+	}
+	}
 		table.addEventListener("mousemove", function(evt){
-			if( balls.length == 0 ) { 
+			if( balls.length == 0 ) {
 				return;
 			}
 			var mX = evt.clientX; var mY = evt.clientY;
@@ -597,8 +615,6 @@
 			TheCue.angle = theta;
 			TheCue.draw();
 		});
-		table.addEventListener("click", function(evt){
-
-		})
+	table.addEventListener("click", red);//TheCue.moveIn);
 	</script>
 </html>
