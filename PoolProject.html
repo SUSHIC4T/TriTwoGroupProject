@@ -538,6 +538,7 @@
 			this.x = 50;
 			this.y = table.height/2;
 			this.height = 20;
+			this.power = 10;
 			this.draw = function(){
 				if(balls.length == 0){
 				  return;
@@ -573,7 +574,6 @@
 			}
 		}
 	}
-
 	function red() {
 		console.log(TheCue.x);
 		if(TheCue.x > 15){
@@ -588,8 +588,22 @@
 			//TheCue.draw();
 			setTimeout(function(){TheCue.x = 50;}, 1000);
 		//start ball movement. What should we do with cue?
-			balls[balls.length - 1].xVel = -10;
-			balls[balls.length - 1].goLeft = true;
+		
+			balls[balls.length - 1].xVel = Math.cos(TheCue.angle) * TheCue.power;
+			balls[balls.length - 1].yVel = Math.sin(TheCue.angle) * TheCue.power;
+			if (balls[balls.length - 1].xVel > 0) { 
+				balls[balls.length - 1].goRight = true;
+			}
+			if (balls[balls.length - 1].xVel < 0) { 
+				balls[balls.length - 1].goLeft = true;
+			}
+			if (balls[balls.length - 1].yVel > 0) { 
+				balls[balls.length - 1].goDown = true;
+			}
+			if (balls[balls.length - 1].yVel < 0) { 
+				balls[balls.length - 1].goUp = true;
+			}
+			
 		}
 	}
 		table.addEventListener("mousemove", function(evt){
