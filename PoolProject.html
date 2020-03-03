@@ -587,10 +587,9 @@
 			var p = 4;
 			//TheCue.draw();
 			setTimeout(function(){TheCue.x = 50;}, 1000);
-		//start ball movement. What should we do with cue?
-		
-			balls[balls.length - 1].xVel = Math.cos(TheCue.angle) * TheCue.power;
-			balls[balls.length - 1].yVel = Math.sin(TheCue.angle) * TheCue.power;
+			//start ball movement. What should we do with cue?
+			balls[balls.length - 1].xVel = Math.cos(TheCue.angle) * TheCue.power * -1;
+			balls[balls.length - 1].yVel = Math.sin(TheCue.angle) * TheCue.power * -1;
 			if (balls[balls.length - 1].xVel > 0) { 
 				balls[balls.length - 1].goRight = true;
 			}
