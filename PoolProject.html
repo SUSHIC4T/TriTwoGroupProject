@@ -36,6 +36,9 @@
 		<canvas id="table" width="700" height="350"> </canvas>
 		<canvas id="stripes" width ="110" height="430"></canvas>
 		<canvas id="scoreboard" width="220" height="110"></canvas>
+    <br>
+		Power Slider:
+		<input id="speedSlider" type="range" min=0 max=20 value=10></input>
 
 	</body>
 	<script>
@@ -53,6 +56,8 @@
 		var TheCue = new cue();
 		var stick = new Image();
 		var gameInterval = setInterval(dud,1000000000);
+		var solidscore = 0; //make part of player?
+		var stripescore = 0;
 		function dud () {
 			// this is supose to do nothing
 		}
@@ -64,10 +69,8 @@
 			var balltype1 = "Stripes";
 			var balltype2 = "Solids";
 			score.fillText("SCOREBOARD", 80, 20);
-			score.fillText("Player " + Player1.playernum + ":", 40, 45);
-			score.fillText("Player " + Player2.playernum + ":", 40, 80);
-			score.fillText(balltype1, 100, 45);
-			score.fillText(balltype2, 100, 80);
+			score.fillText(balltype1 + ":" + stripescore, 40, 45);
+			score.fillText(balltype2 + ":" + solidscore, 40, 80);
 		//need to define ball types as vaiables!!!
 		}
 		function startGame(eightBall) {
@@ -258,6 +261,14 @@
 			for(i=0 ; i < balls.length ; i++) {
 				for ( p = 0; p < pockets.length; p++) {
 					balls[i].collideWithPocket(pockets[p]);
+					if(balls[i].collideWithPocket(pockets[p])){
+						if(balls[i].solid){
+							solidscore++;
+						}
+						else{
+							stripescore++;
+						}
+					}
 				}
 			}
 			for(i=0;i<balls.length;i++) {
@@ -557,67 +568,54 @@
 					ctx.restore();
 				}
 			}
-			this.moveIn = function(){
-				alert("who" + this.x)
-				if(this.x > 15){
-						alert("oh karp");
-					TheCue.draw();
-					this.x = this.x - 5;
-					TheCue.moveIn();
-				}
-				if(this.x <= 15){
-					var p = 4;
-					TheCue.draw();
-
+		}
+		function hitBallWithCue() {
+			//console.log(TheCue.x);
+			if(TheCue.x > 15){
+			//	TheCue.draw();
+				TheCue.x -= 5;
+				setTimeout(hitBallWithCue, 5);
+				//TheCue.moveIn()
+			}
+			else if(TheCue.x <= 15){
+				
+				//TheCue.draw();
+				//setTimeout(function(){TheCue.x = 50;}, 1000);
 				//start ball movement. What should we do with cue?
-			}
-		}
-	}
-	function red() {
-		console.log(TheCue.x);
-		if(TheCue.x > 15){
-
-		//	TheCue.draw();
-			TheCue.x = TheCue.x - 5;
-			setTimeout(red, .001);
-			//TheCue.moveIn();
-		}
-		if(TheCue.x <= 15){
-			var p = 4;
-			//TheCue.draw();
-			setTimeout(function(){TheCue.x = 50;}, 1000);
-			//start ball movement. What should we do with cue?
-			balls[balls.length - 1].xVel = Math.cos(TheCue.angle) * TheCue.power * -1;
-			balls[balls.length - 1].yVel = Math.sin(TheCue.angle) * TheCue.power * -1;
-			if (balls[balls.length - 1].xVel > 0) { 
-				balls[balls.length - 1].goRight = true;
-			}
-			if (balls[balls.length - 1].xVel < 0) { 
-				balls[balls.length - 1].goLeft = true;
-			}
-			if (balls[balls.length - 1].yVel > 0) { 
-				balls[balls.length - 1].goDown = true;
-			}
-			if (balls[balls.length - 1].yVel < 0) { 
-				balls[balls.length - 1].goUp = true;
-			}
-			
-		}
-	}
-		table.addEventListener("mousemove", function(evt){
-			if( balls.length == 0 ) {
+				balls[balls.length - 1].xVel = Math.cos(TheCue.angle) * TheCue.power * -1;
+				balls[balls.length - 1].yVel = Math.sin(TheCue.angle) * TheCue.power * -1;
+				if (balls[balls.length - 1].xVel > 0) {
+					balls[balls.length - 1].goRight = true;
+				}
+				if (balls[balls.length - 1].xVel < 0) {
+					balls[balls.length - 1].goLeft = true;
+				}
+				if (balls[balls.length - 1].yVel > 0) {
+					balls[balls.length - 1].goDown = true;
+				}
+				if (balls[balls.length - 1].yVel < 0) {
+					balls[balls.length - 1].goUp = true;
+				}
+				TheCue.x = 50;
 				return;
 			}
-			var mX = evt.clientX; var mY = evt.clientY;
-			var rect = evt.target.getBoundingClientRect();
-			mX = mX - rect.left;
-			mY = mY - rect.top - 5;
-			var delx = mX - balls[balls.length - 1].x;
-			var dely = mY - balls[balls.length - 1].y;
-			var theta = Math.atan2(-dely, -delx);
-			TheCue.angle = theta;
-			TheCue.draw();
-		});
-	table.addEventListener("click", red);//TheCue.moveIn);
+		}
+			table.addEventListener("mousemove", function(evt){
+				if( balls.length == 0 ) {
+					return;
+				}
+				var mX = evt.clientX; var mY = evt.clientY;
+				var rect = evt.target.getBoundingClientRect();
+				mX = mX - rect.left;
+				mY = mY - rect.top - 5;
+				var delx = mX - balls[balls.length - 1].x;
+				var dely = mY - balls[balls.length - 1].y;
+				var theta = Math.atan2(-dely, -delx);
+				TheCue.angle = theta;
+				TheCue.draw();
+			});
+		table.addEventListener("click", hitBallWithCue);
+
+
 	</script>
 </html>
