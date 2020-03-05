@@ -280,7 +280,9 @@
 			for(i=0;i<pockets.length;i++) {
 				pockets[i].draw();
 			}
-			TheCue.draw();
+			if(checkBallsStop()){
+				TheCue.draw();
+			}
 			paintScoreboard();
 		}
 		function clearCanvas(){
@@ -533,8 +535,8 @@
 				if( radCheck > (this.radius/3) + pocket.radius) {
 					return false;
 				}
-				this.x = 67890;
-				this.y = 67890;
+				this.x = 67890 * this.ballNum;
+				this.y = 67890 * this.ballNum;
 				this.xVel = 0;
 				this.yVel = 0;
 				if( this.ballNum == 0 ) {
@@ -571,6 +573,9 @@
 		}
 		function hitBallWithCue() {
 			//console.log(TheCue.x);
+			if(!checkBallsStop()){
+				return;
+			}
 			if(TheCue.x > 15){
 			//	TheCue.draw();
 				TheCue.x -= 5;
@@ -604,6 +609,9 @@
 				if( balls.length == 0 ) {
 					return;
 				}
+				if(!checkBallsStop()){
+					return;
+				}
 				var mX = evt.clientX; var mY = evt.clientY;
 				var rect = evt.target.getBoundingClientRect();
 				mX = mX - rect.left;
@@ -615,7 +623,5 @@
 				TheCue.draw();
 			});
 		table.addEventListener("click", hitBallWithCue);
-
-
 	</script>
 </html>
