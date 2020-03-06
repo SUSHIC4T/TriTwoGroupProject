@@ -45,11 +45,7 @@
 
 	</body>
 	<script>
-		setInterval(print, 33);
-		function print(){
-		// global varibles
-		var p = document.getElementById("speedSlider").value;
-	}
+
 		var table = document.getElementById("table");
 		var tableWidth = table.width;
 		var ctx = table.getContext("2d");
@@ -72,11 +68,14 @@
 		}
 		stick.src = "stick.png";
 		//balls = startgame(game,balls);
-		paintScoreboard();
+	//	paintScoreboard();
 		//need to define ball types as vaiables!!!
 		function startGame(eightBall) {
 			stripescore = 0;
 			solidscore = 0;
+			clearScoreboard();
+			paintScoreboard();
+
 			clearInterval(gameInterval);
 			//if selected game is false it is nine ball pool, and if it is true, it is eight ball pool
 			if(eightBall){
@@ -154,8 +153,12 @@
 						fifthteenBall = new ball (20,350,"brown",false,15,0,0),
 						queueBall = new ball (20,400,"white",true,0,0,0)];
 			}else{
-				Player1 = new player(1, nineBall);
-				Player2 = new player(2, nineBall); //bc eightball is a variable for then
+				stripescore = 0;
+				solidscore = 0;
+				clearScoreboard();
+				paintScoreboard();
+				Player1 = new player(1, "nineBall");
+				Player2 = new player(2, "nineBall"); //bc eightball is a variable for then
 				//game type right?
 				//array of balls
 				balls = [
@@ -227,9 +230,9 @@
 
 		function clearScoreboard(){
 
-		/*	score.fillStyle = "#800000";
+			score.fillStyle = "#800000";
 			score.fillRect(0,0,220,110);
-			paintScoreboard();	*/
+			paintScoreboard();
 		return;
 
 		}
@@ -555,7 +558,7 @@
 					this.y = 175;
 				}
 				if(this.solid && this.ballNum != 0){
-					clearScoreboard();
+				//	clearScoreboard();
 					solidscore++
 					score.fillText(solidscore, scorexsol, 80);
 					scorexsol += 10;
@@ -566,7 +569,7 @@
 					}
 				}
 				else if(!this.solid && this.ballNum != 0){
-					clearScoreboard();
+				//	clearScoreboard();
 					stripescore++
 					score.fillText(stripescore, scorexstp, 45);
 					scorexstp += 10;
