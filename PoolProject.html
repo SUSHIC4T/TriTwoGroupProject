@@ -30,19 +30,26 @@
 		<title>Pool Game</title>
 	</head>
 	<body>
+		<div> Choose game Type</dive>
+		<div>Adjust cue power with Power Slider</div>
+		<div> Click to shoot </div>
 		<button onclick="startGame(true)">Click to play 8 ball pool</button>
 		<button onclick="startGame(false)">Click to play 9 ball pool</button>
+		Power Slider:
+		<input id="speedSlider" type="range" min=1 max=50 value=20></input>
 		<canvas id="canvas" width="110" height="430"></canvas>
 		<canvas id="table" width="700" height="350"> </canvas>
 		<canvas id="stripes" width ="110" height="430"></canvas>
 		<canvas id="scoreboard" width="220" height="110"></canvas>
     <br>
-		Power Slider:
-		<input id="speedSlider" type="range" min=0 max=20 value=10></input>
 
 	</body>
 	<script>
+		setInterval(print, 33);
+		function print(){
 		// global varibles
+		var p = document.getElementById("speedSlider").value;
+	}
 		var table = document.getElementById("table");
 		var tableWidth = table.width;
 		var ctx = table.getContext("2d");
@@ -58,22 +65,18 @@
 		var gameInterval = setInterval(dud,1000000000);
 		var solidscore = 0; //make part of player?
 		var stripescore = 0;
+		var scorexsol = 100;
+		var scorexstp = 104;
 		function dud () {
 			// this is supose to do nothing
 		}
 		stick.src = "stick.png";
 		//balls = startgame(game,balls);
-		function paintScoreboard(){
-		//	score.write.fontColor("yellow");
-			score.font = "15px Times New Roman";
-			var balltype1 = "Stripes";
-			var balltype2 = "Solids";
-			score.fillText("SCOREBOARD", 80, 20);
-			score.fillText(balltype1 + ":" + stripescore, 40, 45);
-			score.fillText(balltype2 + ":" + solidscore, 40, 80);
+		paintScoreboard();
 		//need to define ball types as vaiables!!!
-		}
 		function startGame(eightBall) {
+			stripescore = 0;
+			solidscore = 0;
 			clearInterval(gameInterval);
 			//if selected game is false it is nine ball pool, and if it is true, it is eight ball pool
 			if(eightBall){
@@ -151,8 +154,8 @@
 						fifthteenBall = new ball (20,350,"brown",false,15,0,0),
 						queueBall = new ball (20,400,"white",true,0,0,0)];
 			}else{
-				Player1 = new player(1, eightBall);
-				Player2 = new player(2, eightBall); //bc eightball is a variable for then
+				Player1 = new player(1, nineBall);
+				Player2 = new player(2, nineBall); //bc eightball is a variable for then
 				//game type right?
 				//array of balls
 				balls = [
@@ -221,6 +224,15 @@
 					queueBall = new ball (20,400,"white",true,0,0,0)];
 			}
 		}
+
+		function clearScoreboard(){
+
+		/*	score.fillStyle = "#800000";
+			score.fillRect(0,0,220,110);
+			paintScoreboard();	*/
+		return;
+
+		}
 		// pocket consuctor
 		function pocket(x, y){
 			this.x = x;
@@ -260,15 +272,15 @@
 			}
 			for(i=0 ; i < balls.length ; i++) {
 				for ( p = 0; p < pockets.length; p++) {
-					balls[i].collideWithPocket(pockets[p]);
-					if(balls[i].collideWithPocket(pockets[p])){
+					(balls[i].collideWithPocket(pockets[p]));
+				/*	if(balls[i].collideWithPocket(pockets[p])){
 						if(balls[i].solid){
 							solidscore++;
 						}
 						else{
 							stripescore++;
 						}
-					}
+					} */
 				}
 			}
 			for(i=0;i<balls.length;i++) {
@@ -283,19 +295,18 @@
 			if(checkBallsStop()){
 				TheCue.draw();
 			}
-			paintScoreboard();
 		}
 		function clearCanvas(){
 			ctx.fillStyle = "#00AF00";
 			ctx.fillRect(0,0,700,350);
 		}
-		function score(){
+		/*function score(){
 			scorecount++; //need to define this variable somehwere, should it be global?
 			alert("Nice shot!") // or text that appears
 			if(scorecount == 8){ //but should depend on game
 				//for what do we want to do here
 				}
-		}
+		} */
 		// ball constructor
 		function ball (x,y,color,solid,Bn,vx,vy) {
 			this.color = color;
@@ -543,9 +554,44 @@
 					this.x = 600;
 					this.y = 175;
 				}
+				if(this.solid && this.ballNum != 0){
+					clearScoreboard();
+					solidscore++
+					score.fillText(solidscore, scorexsol, 80);
+					scorexsol += 10;
+			//		score.fillRect(40, 45, 5, 5);
+				//	paintScoreboard();
+					if(Player1.gametype == "eightBall" && solidscore == 8){
+						alert("Congrats Solids!");
+					}
+				}
+				else if(!this.solid && this.ballNum != 0){
+					clearScoreboard();
+					stripescore++
+					score.fillText(stripescore, scorexstp, 45);
+					scorexstp += 10;
+
+		//			score.fillRect(40, 45, 5, 5);
+				//	paintScoreboard();
+					if(Player1.gametype == "eightBall" && solidscore == 8){
+						alert("Congrats Stripes!");
+					}
+				}
 			}
 		}
+		function paintScoreboard(){
+		//	score.write.fontColor("yellow");
+
+			score.font = "15px Times New Roman";
+			var balltype1 = "Stripes";
+			var balltype2 = "Solids";
+			score.fillStyle ="#fafafa";
+			score.fillText("SCOREBOARD", 60, 20);
+			score.fillText(balltype1 + ":  " + this.stripescore, 40, 45);
+			score.fillText(balltype2 + ":  " + this.solidscore, 40, 80);
+		}
 		function cue(){
+			var p = document.getElementById("speedSlider").value;
 			this.color = "black";
 			this.x = 50;
 			this.y = table.height/2;
@@ -583,12 +629,12 @@
 				//TheCue.moveIn()
 			}
 			else if(TheCue.x <= 15){
-				
+				var p = document.getElementById("speedSlider").value;
 				//TheCue.draw();
 				//setTimeout(function(){TheCue.x = 50;}, 1000);
 				//start ball movement. What should we do with cue?
-				balls[balls.length - 1].xVel = Math.cos(TheCue.angle) * TheCue.power * -1;
-				balls[balls.length - 1].yVel = Math.sin(TheCue.angle) * TheCue.power * -1;
+				balls[balls.length - 1].xVel = Math.cos(TheCue.angle) * p * -1;
+				balls[balls.length - 1].yVel = Math.sin(TheCue.angle) * p * -1;
 				if (balls[balls.length - 1].xVel > 0) {
 					balls[balls.length - 1].goRight = true;
 				}
